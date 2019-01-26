@@ -9,10 +9,13 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.csye6225.spring2019</groupId>
+
 	<artifactId>csye6225</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>csye6225</name>
 	<description>csye6225 for spring2019</description>
+
+	
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -42,6 +45,7 @@
 			<scope>runtime</scope>
 		</dependency>
 		<dependency>
+
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
