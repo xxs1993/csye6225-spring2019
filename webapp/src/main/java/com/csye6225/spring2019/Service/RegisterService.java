@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 
 public interface RegisterService {
 
-    String getTime();
+    public abstract String getTime();
 
     void registerAccount(Account account);
 
