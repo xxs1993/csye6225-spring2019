@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-public class registerController {
+public class RegisterController {
 
     @Autowired
     private RegisterService registerService;
