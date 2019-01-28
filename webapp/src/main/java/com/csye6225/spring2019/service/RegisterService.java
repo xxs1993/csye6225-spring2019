@@ -6,6 +6,9 @@ public interface RegisterService {
 
     public abstract String getTime();
 
-    void registerAccount(Account account);
+    boolean registerAccount(Account account);
+
+    boolean checkAccount(Account account);
+
 
 }
