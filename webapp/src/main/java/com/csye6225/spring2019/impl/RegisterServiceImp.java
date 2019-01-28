@@ -6,6 +6,7 @@ import com.csye6225.spring2019.service.RegisterService;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,7 +36,8 @@ public class RegisterServiceImp implements RegisterService {
             if(a!= null)
                 return false;
             String p= account.getPassword();
-            //p
+            String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
+            account.setPassword(hp);
             //add into Database
         }catch (Exception e){
             log.info("UnExpected ERROR");
@@ -46,7 +48,18 @@ public class RegisterServiceImp implements RegisterService {
 
     @Override
     public boolean checkAccount(Account account) {
-
+        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPassword()))
+            return false;
+        try{
+            Account a=userRepository.findByEmailAddress(account.getEmailAddress());
+            if (a==null)
+                return false;
+            String p= account.getPassword();
+            //check password
+            //if equal return true, else return false
+        }catch (Exception e){
+            log.info("The Account is Not Exist");
+        }
         return false;
     }
 
