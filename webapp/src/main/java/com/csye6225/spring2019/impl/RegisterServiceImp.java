@@ -28,7 +28,7 @@ public class RegisterServiceImp implements RegisterService {
 
     @Override
     public boolean registerAccount(Account account){
-        //TODO
+
         if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPassword()))
             return false;
         try {
@@ -36,9 +36,10 @@ public class RegisterServiceImp implements RegisterService {
             if(a!= null)
                 return false;
             String p= account.getPassword();
+            //BCrypt password hashing with salt
             String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
             account.setPassword(hp);
-            //add into Database
+            //TODO add into Database
         }catch (Exception e){
             log.info("UnExpected ERROR");
             return false;
@@ -54,13 +55,20 @@ public class RegisterServiceImp implements RegisterService {
             Account a=userRepository.findByEmailAddress(account.getEmailAddress());
             if (a==null)
                 return false;
+            Account a1= userRepository.queryAccountByInfo(account.getEmailAddress(),account.getPassword());
             String p= account.getPassword();
+            String hp=a1.getPassword();
             //check password
-            //if equal return true, else return false
+            if (BCrypt.checkpw(p,hp))
+                log.info("Welcome!");
+            else
+                log.info("Failed");
+
         }catch (Exception e){
-            log.info("The Account is Not Exist");
+            log.info("Please Check Your Account Number/Password");
+            return false;
         }
-        return false;
+        return true;
     }
 
 }
