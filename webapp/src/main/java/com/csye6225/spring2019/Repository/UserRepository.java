@@ -12,7 +12,10 @@ import javax.transaction.Transactional;
 @Repository
 public interface UserRepository extends JpaRepository<Account,Integer> {
 
-    @Query(value="select * from user where email_address = ?1 and password = ?1",nativeQuery = true)
+    Account findByEmailAddress(String email);
+
+
+    @Query(value="select * from user where email_address = ?1 and password = ?2",nativeQuery = true)
     @Transactional
     Account queryAccountByInfo(String emailAddress, String password);
 
