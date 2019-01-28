@@ -1,13 +1,12 @@
-package com.csye6225.spring2019.Controller;
+package com.csye6225.spring2019.controller;
 
-import com.csye6225.spring2019.Entity.Account;
-import com.csye6225.spring2019.Repository.UserRepository;
-import com.csye6225.spring2019.Service.RegisterService;
+import com.csye6225.spring2019.entity.Account;
+import com.csye6225.spring2019.repository.UserRepository;
+import com.csye6225.spring2019.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController

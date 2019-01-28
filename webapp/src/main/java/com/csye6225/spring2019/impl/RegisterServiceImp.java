@@ -1,7 +1,7 @@
-package com.csye6225.spring2019.ServiceImp;
+package com.csye6225.spring2019.impl;
 
-import com.csye6225.spring2019.Entity.Account;
-import com.csye6225.spring2019.Service.RegisterService;
+import com.csye6225.spring2019.entity.Account;
+import com.csye6225.spring2019.service.RegisterService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
