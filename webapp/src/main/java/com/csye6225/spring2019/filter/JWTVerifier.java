@@ -1,7 +1,8 @@
 package com.csye6225.spring2019.filter;
 
+import com.csye6225.spring2019.constant.TokenErrorCodeConstants;
 import com.csye6225.spring2019.exception.TokenException;
-import constant.TokenErrorCodeConstants;
+import com.csye6225.spring2019.constant.TokenErrorCodeConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.micrometer.core.instrument.util.StringUtils;
