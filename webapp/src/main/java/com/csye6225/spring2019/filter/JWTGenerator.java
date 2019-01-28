@@ -5,11 +5,9 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.log4j.Log4j;
 
 import java.util.Date;
 
-@Log4j
 public class JWTGenerator {
     public static String generator( Account account){
         if(account == null) return "";
