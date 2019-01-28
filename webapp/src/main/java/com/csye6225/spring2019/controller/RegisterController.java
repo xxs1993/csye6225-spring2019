@@ -1,6 +1,7 @@
 package com.csye6225.spring2019.controller;
 
 import com.csye6225.spring2019.entity.Account;
+import com.csye6225.spring2019.filter.PasswordValidator;
 import com.csye6225.spring2019.repository.UserRepository;
 import com.csye6225.spring2019.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +39,18 @@ public class RegisterController {
 
     @PostMapping("/user/register")
     public String register(String userName, String password){
-        if(userRepository.findByEmailAddress(userName) == null){
-            Account user = new Account();
-            user.setEmailAddress(userName);
-            //user.setPassword(BCrypt.hashpw(password,BCrypt.gensalt()));
-            userRepository.save(user);
-            return "SignUp Successful!";
+        if(userRepository.findByEmailAddress(userName) == null) {
+            PasswordValidator passwordValidator = new PasswordValidator();
+            if (passwordValidator.validate(password)) {
+                Account user = new Account();
+                user.setEmailAddress(userName);
+                registerService.registerAccount(user);
+                userRepository.save(user);
+                return "SignUp Successful!";
+            }
+            else{
+                return "Password doesn't strong enough";
+            }
         }
         else {
             return "error: This user already existed";
