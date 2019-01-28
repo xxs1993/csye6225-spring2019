@@ -1,15 +1,16 @@
 package com.csye6225.spring2019.filter;
 
+import com.csye6225.spring2019.constant.TokenErrorCodeConstants;
 import com.csye6225.spring2019.exception.TokenException;
-import constant.TokenErrorCodeConstants;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import io.micrometer.core.instrument.util.StringUtils;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@Log4j
+@Log4j2
 public class JWTVerifier  {
     public static boolean isVerified(HttpServletRequest request, HttpServletResponse response) throws  TokenException {
         String authHeader = request.getHeader("Authorization");

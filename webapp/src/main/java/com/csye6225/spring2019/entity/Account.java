@@ -1,4 +1,4 @@
-package com.csye6225.spring2019.Entity;
+package com.csye6225.spring2019.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;

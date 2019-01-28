@@ -1,13 +1,12 @@
-package com.csye6225.spring2019.Controller;
+package com.csye6225.spring2019.controller;
 
-import com.csye6225.spring2019.Entity.Account;
-import com.csye6225.spring2019.Repository.UserRepository;
-import com.csye6225.spring2019.Service.RegisterService;
+import com.csye6225.spring2019.entity.Account;
+import com.csye6225.spring2019.repository.UserRepository;
+import com.csye6225.spring2019.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 
 @RestController
@@ -19,8 +18,8 @@ public class RegisterController {
     private UserRepository userRepository;
 
 
-    @GetMapping("/{email}&{password}")
-    public String getUser(@PathVariable("email") String email, @PathVariable("password") String password){
+    @GetMapping("/")
+    public String getUser(@RequestParam("email") String email, @RequestParam("password") String password){
         Account account = userRepository.queryAccountByInfo(email, password);
         if(account == null){
            return "The user doesn't exsit or password is wrong";
@@ -38,9 +37,16 @@ public class RegisterController {
     }
 
     @PostMapping("/user/register")
-    public Account register(@RequestBody Account account){
-        //registerService.registerAccount(account);
-        userRepository.save(account);
-        return account;
+    public String register(String userName, String password){
+        if(userRepository.findByEmailAddress(userName) == null){
+            Account user = new Account();
+            user.setEmailAddress(userName);
+            //user.setPassword(BCrypt.hashpw(password,BCrypt.gensalt()));
+            userRepository.save(user);
+            return "SignUp Successful!";
+        }
+        else {
+            return "error: This user already existed";
+        }
     }
 }
