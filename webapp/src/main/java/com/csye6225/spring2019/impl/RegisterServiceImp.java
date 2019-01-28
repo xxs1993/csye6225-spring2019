@@ -58,8 +58,8 @@ public class RegisterServiceImp implements RegisterService {
             Account a1= userRepository.queryAccountByInfo(account.getEmailAddress(),account.getPassword());
             String p= account.getPassword();
             String hp=a1.getPassword();
-            //check password
-            if (BCrypt.checkpw(p,hp))
+            //check email and password
+            if (a1.getEmailAddress().equals(account.getEmailAddress()) && BCrypt.checkpw(p,hp))
                 log.info("Welcome!");
             else
                 log.info("Failed");
