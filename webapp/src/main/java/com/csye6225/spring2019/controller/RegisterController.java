@@ -22,11 +22,12 @@ public class RegisterController {
 
 
     @GetMapping("/")
+
     public String getUser(@RequestParam("email") String email, @RequestParam("password") String password){
         //I will rewrite whole this part;
         Account account = userRepository.queryAccountByInfo(email, password);
         if(account == null){
-           return "The user doesn't exsit or password is wrong";
+           return "The user doesn't exsit or pwdString is wrong";
         }
         else {
             String time = registerService.getTime();
@@ -50,7 +51,7 @@ public class RegisterController {
                     Account user = new Account();
                     user.setEmailAddress(userName);
                     registerService.registerAccount(user);
-                    userRepository.save(user);
+                    userRepository.insertAccount(user);
                     return "SignUp Successful!";
                 } else {
                     return "Password doesn't strong enough";

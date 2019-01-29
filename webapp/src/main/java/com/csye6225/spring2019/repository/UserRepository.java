@@ -1,21 +1,30 @@
 package com.csye6225.spring2019.repository;
 
 import com.csye6225.spring2019.entity.Account;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
+import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+//import org.springframework.data.jpa.repository.JpaRepository;
+//import org.springframework.data.jpa.repository.Query;
+//import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
+//import javax.transaction.Transactional;
+import java.util.List;
 
 
 @Repository
-public interface UserRepository extends JpaRepository<Account,Integer> {
+@Mapper
+public interface UserRepository {
 
-    Account findByEmailAddress(String email);
+    Account findByEmailAddress(@Param("email") String email);
 
 
-    @Query(value="select * from user where email_address = ?1 and password = ?2",nativeQuery = true)
-    @Transactional
-    Account queryAccountByInfo(String emailAddress, String password);
+//    @Query(value="select * from user where email_address = ?1 and pwdString = ?2",nativeQuery = true)
+//    @Transactional
+    Account queryAccountByInfo(@Param("email") String emailAddress,@Param("pwdString") String password);
 
+    int insertAccount(Account account);
+
+    List<Account> findAll();
 }
