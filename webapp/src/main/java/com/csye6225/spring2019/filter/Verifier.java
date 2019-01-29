@@ -28,8 +28,7 @@ public class Verifier {
         Account account = new Account();
         account.setEmailAddress(list.get(0));
         account.setPwdString(list.get(1));
-        return account;*/
-        return new Account();
+        return account;
     }
 
 }

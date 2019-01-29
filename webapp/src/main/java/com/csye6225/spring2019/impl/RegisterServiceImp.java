@@ -39,6 +39,7 @@ public class RegisterServiceImp implements RegisterService {
             //BCrypt pwdString hashing with salt
             String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
             account.setPwdString(hp);
+            //add into Database
             userRepository.insertAccount(account);
         }catch (Exception e){
             log.info("UnExpected ERROR");
