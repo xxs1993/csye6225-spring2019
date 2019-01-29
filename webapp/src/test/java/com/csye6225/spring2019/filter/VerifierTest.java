@@ -42,15 +42,17 @@ public void testIsVerifiedForRequestResponse() throws Exception {
 @Test
 public void testIsVerifiedAuthHeader() throws Exception { 
 //TODO: Test goes here...
-    Account account = Verifier.isVerified("Basic eHhzOjEyMw==");
+    String auth = "Basic eHhzOjEyMw==";
+    Account account = Verifier.isVerified(auth);
     Assert.assertTrue(account!=null);
-    Assert.assertFalse(Strings.isNullOrEmpty(account.getEmailAddress())|| Strings.isNullOrEmpty(account.getPassword()));
-    System.out.println(account.getEmailAddress()+":" +account.getPassword() );
+    Assert.assertFalse(Strings.isNullOrEmpty(account.getEmailAddress())|| Strings.isNullOrEmpty(account.getPwdString()));
+    System.out.println(account.getEmailAddress()+":" +account.getPwdString() );
     Account account1 = Verifier.isVerified("Basic eHhzOjEyMw==");
     Account account2 = Verifier.isVerified("Basics eHhzOjEyMw==");
     Assert.assertTrue(account2==null);
     Assert.assertTrue(account.getEmailAddress().equals(account1.getEmailAddress()));
-    Assert.assertTrue(account.getPassword().equals(account1.getPassword()));
+    Assert.assertTrue(account.getPwdString().equals(account1.getPwdString()));
+
 
 
 } 
