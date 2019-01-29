@@ -29,16 +29,16 @@ public class RegisterServiceImp implements RegisterService {
     @Override
     public boolean registerAccount(Account account){
 
-        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPassword()))
+        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPwdString()))
             return false;
         try {
             Account a = userRepository.findByEmailAddress(account.getEmailAddress());
             if(a!= null)
                 return false;
-            String p= account.getPassword();
-            //BCrypt password hashing with salt
+            String p= account.getPwdString();
+            //BCrypt pwdString hashing with salt
             String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
-            account.setPassword(hp);
+            account.setPwdString(hp);
             //TODO add into Database
         }catch (Exception e){
             log.info("UnExpected ERROR");
@@ -49,16 +49,16 @@ public class RegisterServiceImp implements RegisterService {
 
     @Override
     public boolean checkAccount(Account account) {
-        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPassword()))
+        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPwdString()))
             return false;
         try{
             Account a=userRepository.findByEmailAddress(account.getEmailAddress());
             if (a==null)
                 return false;
-            Account a1= userRepository.queryAccountByInfo(account.getEmailAddress(),account.getPassword());
-            String p= account.getPassword();
-            String hp=a1.getPassword();
-            //check email and password
+            Account a1= userRepository.queryAccountByInfo(account.getEmailAddress(),account.getPwdString());
+            String p= account.getPwdString();
+            String hp=a1.getPwdString();
+            //check email and pwdString
             if (a1.getEmailAddress().equals(account.getEmailAddress()) && BCrypt.checkpw(p,hp))
                 log.info("Welcome!");
             else
