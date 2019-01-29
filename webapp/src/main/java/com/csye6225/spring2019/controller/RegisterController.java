@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
@@ -27,20 +30,28 @@ public class RegisterController {
 
 
     @GetMapping("/")
-    public String getUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        /*String auth = httpServletRequest.getHeader("Authorization");
+    public Result<String> getUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
+        Result result = new Result();
+        String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
         if(account == null){
-            httpServletResponse.sendError();
-            return
+            httpServletResponse.setStatus(SC_UNAUTHORIZED);
+
+            httpServletResponse.sendError(SC_UNAUTHORIZED,"I am not logging because User's information is wrong");
+            return result;
         }
         if(registerService.checkAccount(account)){
-
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss");
+            LocalDateTime now  = LocalDateTime.now();
+            result.setMessage(dateTimeFormatter.format(now));
+            result.setStatusCode(200);
+            result.setData(dateTimeFormatter.format(now));
+            return result;
         }else {
-
-        }*/
-        return "";
-
+            httpServletResponse.setStatus(SC_UNAUTHORIZED);
+            httpServletResponse.sendError(SC_UNAUTHORIZED,"I am not logging because User's information is wrong ");
+            return result;
+        }
 
     }
 
@@ -63,11 +74,12 @@ public class RegisterController {
                     user.setEmailAddress(userName);
                     user.setPwdString(password);
                     registerService.registerAccount(user);
+                    result.setData("Account is your emailAddress");
                     result.setMessage("register successful");
                     result.setStatusCode(200);
                     return result;
                 } else {
-                    result.setMessage("Error: Password not strong enough ");
+                    result.setMessage("Error: Password not strong enough, you need use at least three pattern of [0-9,a-z,A-z,#$%^]");
                     result.setStatusCode(601);
                     return result;
                 }
