@@ -5,7 +5,9 @@ import com.google.common.base.Strings;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.Before; 
-import org.junit.After; 
+import org.junit.After;
+
+import java.util.Base64;
 
 /** 
 * Verifier Tester.
@@ -31,7 +33,8 @@ public void after() throws Exception {
 */ 
 @Test
 public void testIsVerifiedForRequestResponse() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    System.out.print(new String(Base64.getDecoder().decode("eHhzOjEyMw==")));
 } 
 
 /** 
@@ -44,6 +47,7 @@ public void testIsVerifiedAuthHeader() throws Exception {
 //TODO: Test goes here...
     String auth = "Basic eHhzOjEyMw==";
     Account account = Verifier.isVerified(auth);
+    System.out.println(account.getEmailAddress());
     Assert.assertTrue(account!=null);
     Assert.assertFalse(Strings.isNullOrEmpty(account.getEmailAddress())|| Strings.isNullOrEmpty(account.getPwdString()));
     System.out.println(account.getEmailAddress()+":" +account.getPwdString() );
