@@ -9,6 +9,6 @@ import lombok.ToString;
 @ToString
 public class Result<T> {
     public T data;
-    public int errorCode;
+    public int statusCode;
     public String message;
 }
