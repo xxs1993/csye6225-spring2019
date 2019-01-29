@@ -1,5 +1,7 @@
 package com.csye6225.spring2019.entity;
 
+import io.micrometer.core.instrument.util.StringUtils;
+
 import javax.persistence.*;
 
 @Entity
@@ -10,7 +12,7 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name = "emailAddress")
+    @Column(name = "email_Address")
     private String emailAddress;
 
     @Column(name = "password")
