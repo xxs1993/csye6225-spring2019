@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csye6225.spring2019.repository.UserRepository">
+    <resultMap id="result" type="com.csye6225.spring2019.entity.Account">
+        <id column="ID" property="id"/>
+        <result column="email_address" property="emailAddress"/>
+        <result column="pwd_string" property="pwdString"/>
+    </resultMap>
+    <select id="findByEmailAddress" resultType="com.csye6225.spring2019.entity.Account">
+        SELECT `id`, `EMAIL_ADDRESS` emailAddress, 'PWD_STRING' pwsString
+        FROM `user`
+        WHERE email_address = #{email}
+    </select>
+
+    <select id="queryAccountByInfo" resultType="com.csye6225.spring2019.entity.Account">
+        SELECT `id`, `EMAIL_ADDRESS` emailAddress, 'PWD_STRING' pwsString
+        FROM `user`
+        WHERE email_address = #{email} and pwd_string = #{password}
+    </select>
+
+    <insert id="insertAccount" parameterType="com.csye6225.spring2019.entity.Account">
+      insert into user (id,EMAIL_ADDRESS,PWD_STRING)
+      values (#{id},#{emailAddress},#{pwdString})
+    </insert>
+
+    <select id="findAll" resultMap="result">
+      SELECT * FROM user
+    </select>
+</mapper>
+
+

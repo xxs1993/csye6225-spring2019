@@ -28,22 +28,20 @@ public class RegisterController {
 
     @GetMapping("/")
     public String getUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        //I will rewrite whole this part;
-        /*Account account = userRepository.queryAccountByInfo(email, password);
+        /*String auth = httpServletRequest.getHeader("Authorization");
+        Account account = Verifier.isVerified(auth);
         if(account == null){
-           return "The user doesn't exsit or password is wrong";
+            httpServletResponse.sendError();
+            return
         }
-        else {
-            String time = registerService.getTime();
-            System.out.println(time);
-            return time;*/
-        //String authorization = httpServletRequest.getHeader("Authorization");
-       // Account account = Verifier.isVerified(authorization);
-        //if(account == null){
-           //httpServletResponse.setStatus(SC_UNAUTHORIZED);
-            //httpServletResponse.sendError(SC_UNAUTHORIZED);
-        //}
+        if(registerService.checkAccount(account)){
+
+        }else {
+
+        }*/
         return "";
+
+
     }
 
     @GetMapping("/account")
@@ -52,29 +50,37 @@ public class RegisterController {
     }
 
     @PostMapping("/user/register")
-    public String register(@RequestBody Account account){
+    public Result<String> register(@RequestBody Account account){
+        Result<String> result = new Result<>();
         AccountValidator accountValidator = new AccountValidator();
         String userName = account.getEmailAddress();
-        String password = account.getPassword();
+        String password = account.getPwdString();
         if(accountValidator.validate(userName)) {
             if (userRepository.findByEmailAddress(userName) == null) {
                 PasswordValidator passwordValidator = new PasswordValidator();
                 if (passwordValidator.validate(password)) {
                     Account user = new Account();
                     user.setEmailAddress(userName);
-                    user.setPassword(password);
+                    user.setPwdString(password);
                     registerService.registerAccount(user);
-                    userRepository.save(user);
-                    return "SignUp Successful!";
+                    result.setMessage("register successful");
+                    result.setStatusCode(200);
+                    return result;
                 } else {
-                    return "Password doesn't strong enough";
+                    result.setMessage("Error: Password not strong enough ");
+                    result.setStatusCode(601);
+                    return result;
                 }
             } else {
-                return "error: This user already existed";
+                result.setMessage("Error: This user already existed");
+                result.setStatusCode(602);
+                return result;
             }
         }
         else{
-            return "userName illegal";
+            result.setMessage("Error: User name isn't email addresss");
+            result.setStatusCode(603);
+            return result;
         }
 
     }
