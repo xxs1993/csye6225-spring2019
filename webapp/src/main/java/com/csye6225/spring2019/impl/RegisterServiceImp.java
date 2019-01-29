@@ -29,16 +29,16 @@ public class RegisterServiceImp implements RegisterService {
     @Override
     public boolean registerAccount(Account account){
 
-        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPassword()))
+        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPwdString()))
             return false;
         try {
             Account a = userRepository.findByEmailAddress(account.getEmailAddress());
             if(a!= null)
                 return false;
-            String p= account.getPassword();
-            //BCrypt password hashing with salt
+            String p= account.getPwdString();
+            //BCrypt pwdString hashing with salt
             String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
-            account.setPassword(hp);
+            account.setPwdString(hp);
             //TODO add into Database
         }catch (Exception e){
             log.info("UnExpected ERROR");
@@ -49,14 +49,14 @@ public class RegisterServiceImp implements RegisterService {
 
     @Override
     public boolean checkAccount(Account account) {
-        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPassword()))
+        if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPwdString()))
             return false;
         try{
             Account a=userRepository.findByEmailAddress(account.getEmailAddress());
             if (a==null)
                 return false;
-            String p= account.getPassword();
-            String hp=a.getPassword();
+            String p= account.getPwdString();
+            String hp=a.getPwdString();
             //check password
             if (BCrypt.checkpw(p,hp))
                 log.info("Welcome!");
