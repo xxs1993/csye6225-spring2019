@@ -11,6 +11,7 @@ import lombok.ToString;
 @Setter
 @ToString
 //@Table(name = "user")
+
 public class Account {
 
     private int id;
@@ -18,5 +19,6 @@ public class Account {
     private String emailAddress;
 
     private String pwdString;
+
 
 }
