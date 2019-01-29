@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<Account,Integer> {
     Account findByEmailAddress(String email);
 
 
-    @Query(value="select * from user where email_address = ?1 and password = ?2",nativeQuery = true)
+    @Query(value="select * from user where binary email_address = ?1 and  binary password = ?2",nativeQuery = true)
     @Transactional
     Account queryAccountByInfo(String emailAddress, String password);
 
