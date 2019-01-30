@@ -28,18 +28,18 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
 
 6.Set up your MySQL username and password in src/main/java/source/application.properties.
 
-7.Build table follow Mysql Table structure:   
-| Name | NEU ID | Email Address |
-| --- | --- | --- |
-|Xuanshan Xiao |001474067|xiao.x@husky.neu.edu |
-|Zehua Ma |001448271 |ma.zeh@husky.nue.edu |
-|YuChiao Huang |001442969 |huang.yuc@husky.neu.edu |
-|Yimu Jin| 001449259 | jin.yim@husky.neu.edu |
+7.Build table follow Mysql Table structure:  
+
  |Field         | Type          | Null  | Key | Default  |    Extra     |
+ 
  |--------------|---------------|-------|-----|----------|--------------|
+ 
  |id            | int(11)       |   No  |PRI  |  NULL    |auto_increment|
+ 
  |email_addr    | varchar(255)  |   Yes |     |  NULL    |              |
+ 
  |pwd_String    | varchar(255)  |   Yes |     |  NULL    |              |
+ 
  
 ## Running Tests
 8.Please install the latest Postman in your VM(Make sure you have Java1.8)
