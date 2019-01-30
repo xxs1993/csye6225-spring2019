@@ -28,8 +28,8 @@ public class RegisterServiceImp implements RegisterService {
             Account a = userRepository.findByEmailAddress(account.getEmailAddress());
             if(a!= null)
                 return false;
-            String p= account.getPwdString();
             //BCrypt pwdString hashing with salt
+            String p= account.getPwdString();
             String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
             account.setPwdString(hp);
             //add into Database

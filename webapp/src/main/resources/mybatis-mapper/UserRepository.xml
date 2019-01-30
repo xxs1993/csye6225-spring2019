@@ -9,13 +9,13 @@
         <result column="pwd_string" property="pwdString"/>
     </resultMap>
     <select id="findByEmailAddress" resultType="com.csye6225.spring2019.entity.Account">
-        SELECT `id`, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
+        SELECT ID, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
         FROM `user`
         WHERE email_address = #{emailAddress}
     </select>
 
     <select id="queryAccountByInfo" resultType="com.csye6225.spring2019.entity.Account">
-        SELECT `id`, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
+        SELECT ID, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
         FROM `user`
         WHERE email_address = #{emailAddress} and pwd_string = #{pwdString}
     </select>

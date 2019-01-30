@@ -60,7 +60,7 @@ public class RegisterController {
         return userRepository.findAll();
     }
 
-    @PostMapping("/user/register")
+    @PostMapping("user/register")
     public Result<String> register(@RequestBody Account account){
         Result<String> result = new Result<>();
         AccountValidator accountValidator = new AccountValidator();
