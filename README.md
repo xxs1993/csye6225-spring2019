@@ -29,16 +29,11 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
 6.Set up your MySQL username and password in src/main/java/source/application.properties.
 
 7.Build table follow Mysql Table structure:  
-
- |Field         | Type          | Null  | Key | Default  |    Extra     |
- 
- |--------------|---------------|-------|-----|----------|--------------|
- 
- |id            | int(11)       |   No  |PRI  |  NULL    |auto_increment|
- 
- |email_addr    | varchar(255)  |   Yes |     |  NULL    |              |
- 
- |pwd_String    | varchar(255)  |   Yes |     |  NULL    |              |
+|Field         | Type          | Null  | Key | Default  |    Extra     |
+|--------------|---------------|-------|-----|----------|--------------|
+|id            | int(11)       |   No  |PRI  |  NULL    |auto_increment|
+|email_addr    | varchar(255)  |   Yes |     |  NULL    |              |
+|pwd_String    | varchar(255)  |   Yes |     |  NULL    |              |
  
  
 ## Running Tests
