@@ -16,8 +16,11 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
 
 ## Build Instructions
 1.install and set up Java in your computer. 
+
 2.install and set up Mysql in your computer.
+
 3.install and set up Maven in your computer.
+
 ## Deploy Instructions
 4.import Webapp into your IDE(making sure the IDE supports Apache Tomcat),select "Import project from external model"-->"Maven".
 5.Make sure you set up your SDK and Configuration in your IDE.
