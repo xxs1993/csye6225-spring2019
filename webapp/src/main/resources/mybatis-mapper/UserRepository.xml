@@ -9,20 +9,20 @@
         <result column="pwd_string" property="pwdString"/>
     </resultMap>
     <select id="findByEmailAddress" resultType="com.csye6225.spring2019.entity.Account">
-        SELECT `id`, `EMAIL_ADDRESS` emailAddress, 'PWD_STRING' pwsString
+        SELECT `id`, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
         FROM `user`
-        WHERE email_address = #{email}
+        WHERE email_address = #{emailAddress}
     </select>
 
     <select id="queryAccountByInfo" resultType="com.csye6225.spring2019.entity.Account">
-        SELECT `id`, `EMAIL_ADDRESS` emailAddress, 'PWD_STRING' pwsString
+        SELECT `id`, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
         FROM `user`
-        WHERE email_address = #{email} and pwd_string = #{password}
+        WHERE email_address = #{emailAddress} and pwd_string = #{pwdString}
     </select>
 
     <insert id="insertAccount" parameterType="com.csye6225.spring2019.entity.Account">
-      insert into user (id,EMAIL_ADDRESS,PWD_STRING)
-      values (#{id},#{emailAddress},#{pwdString})
+      insert into user (EMAIL_ADDRESS,PWD_STRING)
+      values (#{emailAddress},#{pwdString})
     </insert>
 
     <select id="findAll" resultMap="result">

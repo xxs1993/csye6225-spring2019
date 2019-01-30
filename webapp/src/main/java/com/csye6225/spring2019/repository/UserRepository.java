@@ -17,12 +17,12 @@ import java.util.List;
 @Mapper
 public interface UserRepository {
 
-    Account findByEmailAddress(@Param("email") String email);
+    Account findByEmailAddress(@Param("emailAddress") String emailAddress);
 
 
 //    @Query(value="select * from user where email_address = ?1 and pwdString = ?2",nativeQuery = true)
 //    @Transactional
-    Account queryAccountByInfo(@Param("email") String emailAddress,@Param("pwdString") String password);
+    Account queryAccountByInfo(@Param("emailAddress") String emailAddress,@Param("pwdString") String pwdString);
 
     int insertAccount(Account account);
 
