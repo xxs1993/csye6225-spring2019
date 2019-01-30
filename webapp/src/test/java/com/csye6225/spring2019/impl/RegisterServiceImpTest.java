@@ -1,55 +1,59 @@
 package com.csye6225.spring2019.impl;
 
-import org.junit.Test; 
-import org.junit.Before; 
-import org.junit.After; 
+import com.csye6225.spring2019.entity.Account;
+import com.csye6225.spring2019.repository.UserRepository;
+import com.csye6225.spring2019.service.RegisterService;
+import org.junit.FixMethodOrder;
+import org.junit.Test;
+import static org.junit.Assert.*;
+import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-/** 
-* RegisterServiceImp Tester. 
-* 
-* @author <Authors name> 
-* @since <pre>Jan 28, 2019</pre> 
-* @version 1.0 
-*/ 
-public class RegisterServiceImpTest { 
+/**
+ * RegisterServiceImp Tester.
+ *
+ * @author <Authors name>
+ * @since <pre>Jan 28, 2019</pre>
+ * @version 1.0
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+public class RegisterServiceImpTest {
 
-@Before
-public void before() throws Exception { 
-} 
+    @Autowired
+    private RegisterService registerService;
+    private UserRepository userRepository;
+    /**
+     *
+     * Method: registerAccount(Account account)
+     *
+     */
+    @Test
+    public void testRegisterAccount() throws Exception {
+//TODO: Test goes here...
 
-@After
-public void after() throws Exception { 
-} 
+        assertFalse(registerService.registerAccount(null));
+        Account account = new Account();
+        account.setEmailAddress("test");
+        account.setPwdString("right");
+        userRepository.insertAccount(account);
+        assertFalse(registerService.registerAccount(account));
 
-/** 
-* 
-* Method: getTime() 
-* 
-*/ 
-@Test
-public void testGetTime() throws Exception { 
+    }
+
+    /**
+     *
+     * Method: checkAccount(Account account)
+     *
+     */
+    @Test
+    public void testCheckAccount() throws Exception {
 //TODO: Test goes here... 
-} 
-
-/** 
-* 
-* Method: registerAccount(Account account) 
-* 
-*/ 
-@Test
-public void testRegisterAccount() throws Exception { 
-//TODO: Test goes here... 
-} 
-
-/** 
-* 
-* Method: checkAccount(Account account) 
-* 
-*/ 
-@Test
-public void testCheckAccount() throws Exception { 
-//TODO: Test goes here... 
-} 
+    }
 
 
 } 
