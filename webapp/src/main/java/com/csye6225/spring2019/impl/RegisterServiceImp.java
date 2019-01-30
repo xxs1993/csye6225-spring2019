@@ -20,13 +20,6 @@ public class RegisterServiceImp implements RegisterService {
 
     private UserRepository userRepository;
     @Override
-    public String getTime() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss");
-        LocalDateTime now  = LocalDateTime.now();
-        return dateTimeFormatter.format(now);
-    }
-
-    @Override
     public boolean registerAccount(Account account){
 
         if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPwdString()))
