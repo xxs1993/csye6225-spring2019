@@ -11,7 +11,7 @@
 
 ## Technology Stack
 Frame:Spring boot
-DBMS:MySQL
+DBMS:MySQL(username : root; password:00000000; database : csye6225)
 Other Dependencies : Spring security, Mybatis,jjwt,lombok
 
 ## Build Instructions
