@@ -11,7 +11,7 @@
 
 ## Technology Stack
 Frame:Spring boot
-DBMS:MySQL
+DBMS:MySQL(username : root; password:00000000; database : csye6225)
 Other Dependencies : Spring security, Mybatis,jjwt,lombok
 
 ## Build Instructions
@@ -37,6 +37,15 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
 |email_addr    | varchar(255)  |   Yes |     |  NULL    |              |
 |pwd_String    | varchar(255)  |   Yes |     |  NULL    |              |
  
+ The Mysql code to create table as follow :
+ ```
+ CREATE TABLE user(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    email_address VARCHAR(255),
+    pwd_string VARCHAR(255)
+)
+```
+
  
 ## Running Tests
 8.Please install the latest Postman in your VM(Make sure you have Java1.8)
