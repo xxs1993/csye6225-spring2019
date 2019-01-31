@@ -11,13 +11,13 @@
     <select id="findByEmailAddress" resultType="com.csye6225.spring2019.entity.Account">
         SELECT ID, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
         FROM `user`
-        WHERE email_address = #{emailAddress}
+        WHERE BINARY email_address = #{emailAddress}
     </select>
 
     <select id="queryAccountByInfo" resultType="com.csye6225.spring2019.entity.Account">
         SELECT ID, `EMAIL_ADDRESS` emailAddress, PWD_STRING pwdString
         FROM `user`
-        WHERE email_address = #{emailAddress} and pwd_string = #{pwdString}
+        WHERE BINARY email_address = #{emailAddress} and pwd_string = #{pwdString}
     </select>
 
     <insert id="insertAccount" parameterType="com.csye6225.spring2019.entity.Account">

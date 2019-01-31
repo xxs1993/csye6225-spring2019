@@ -8,8 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 /** 
 * RegisterServiceImp Tester. 
@@ -38,7 +40,7 @@ public void after() throws Exception {
 
 
 
-/*
+
 @Test
 public void testFindAll() throws Exception {
 //TODO: Test goes here...
@@ -47,27 +49,40 @@ public void testFindAll() throws Exception {
     System.out.println(Arrays.toString(accounts.toArray()));
 
 } 
-*/
 
 
 
 
 
 
-/*
+
+
 @Test
 public void testFindByEmailAddress() throws Exception {
 //TODO: Test goes here...
+    int leftLimit = 97; // letter 'a'
+    int rightLimit = 122; // letter 'z'
+    int targetStringLength = 10;
+    Random random = new Random();
+    StringBuilder buffer = new StringBuilder(targetStringLength);
+    for (int i = 0; i < targetStringLength; i++) {
+        int randomLimitedInt = leftLimit + (int)
+                (random.nextFloat() * (rightLimit - leftLimit + 1));
+        buffer.append((char) randomLimitedInt);
+    }
+    String generatedString = buffer.toString();
+
+    System.out.println(generatedString);
     Account account1 = new Account();
-    account1.setEmailAddress("test");
-    account1.setPwdString("right");
+    account1.setEmailAddress(generatedString);
+    account1.setPwdString("test");
     int i = userRepository.insertAccount(account1);
-    Account account = userRepository.findByEmailAddress("test");
+    Account account = userRepository.findByEmailAddress(generatedString);
     System.out.println(account.getEmailAddress() + account.getPwdString());
-    Assert.assertTrue(account.getEmailAddress().equals("test"));
-    Assert.assertTrue(account.getPwdString().equals("right"));
+    Assert.assertTrue(account.getEmailAddress().equals(generatedString));
+    Assert.assertTrue(account.getPwdString().equals("test"));
 }
-*/
+
 
 
 
@@ -81,19 +96,31 @@ public void testFindByEmailAddress() throws Exception {
 
 
 
-/*
+
 @Test
 public void testQueryAccountByInfo() throws Exception {
+    int leftLimit = 97; // letter 'a'
+    int rightLimit = 122; // letter 'z'
+    int targetStringLength = 10;
+    Random random = new Random();
+    StringBuilder buffer = new StringBuilder(targetStringLength);
+    for (int i = 0; i < targetStringLength; i++) {
+        int randomLimitedInt = leftLimit + (int)
+                (random.nextFloat() * (rightLimit - leftLimit + 1));
+        buffer.append((char) randomLimitedInt);
+    }
+    String generatedString = buffer.toString();
+
     Account account1 = new Account();
-    account1.setEmailAddress("test1");
-    account1.setPwdString("right1");
+    account1.setEmailAddress(generatedString);
+    account1.setPwdString("test");
     int i = userRepository.insertAccount(account1);
-    Account account = userRepository.queryAccountByInfo("test1","right1");
+    Account account = userRepository.queryAccountByInfo(generatedString,"test");
     //System.out.println(account.getEmailAddress() + account.getPwdString());
-    Assert.assertTrue(account.getEmailAddress().equals("test1"));
-    Assert.assertTrue(account.getPwdString().equals("right1"));
+    Assert.assertTrue(account.getEmailAddress().equals(generatedString));
+    Assert.assertTrue(account.getPwdString().equals("test"));
 }
-*/
+
 
 
 
@@ -101,8 +128,8 @@ public void testQueryAccountByInfo() throws Exception {
 @Test
 public void testInsertAccount() throws Exception{
     Account account = new Account();
-    account.setEmailAddress("999");
-    account.setPwdString("999");
+    account.setEmailAddress("test");
+    account.setPwdString("test");
     int i = userRepository.insertAccount(account);
     //System.out.println(i);
     Assert.assertTrue(i == 1);
