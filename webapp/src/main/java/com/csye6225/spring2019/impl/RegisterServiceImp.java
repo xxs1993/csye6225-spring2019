@@ -20,13 +20,6 @@ public class RegisterServiceImp implements RegisterService {
 
     private UserRepository userRepository;
     @Override
-    public String getTime() {
-        DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss");
-        LocalDateTime now  = LocalDateTime.now();
-        return dateTimeFormatter.format(now);
-    }
-
-    @Override
     public boolean registerAccount(Account account){
 
         if(account == null || StringUtils.isEmpty(account.getEmailAddress()) || StringUtils.isEmpty(account.getPwdString()))
@@ -35,8 +28,8 @@ public class RegisterServiceImp implements RegisterService {
             Account a = userRepository.findByEmailAddress(account.getEmailAddress());
             if(a!= null)
                 return false;
-            String p= account.getPwdString();
             //BCrypt pwdString hashing with salt
+            String p= account.getPwdString();
             String hp= BCrypt.hashpw(p,BCrypt.gensalt(12));
             account.setPwdString(hp);
             //add into Database
