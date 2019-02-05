@@ -30,7 +30,7 @@ Resources:
       AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the second AZ in the list
       Tags:
       - Key: Name
-        Value: !Sub ${AWS::StackName}-Public-A
+        Value: !Sub ${AWS::StackName}-Public-B
 
   PublicSubnetC:
     Type: AWS::EC2::Subnet
@@ -40,8 +40,8 @@ Resources:
       AvailabilityZone: !Select [ 2, !GetAZs ]    # Get the third AZ in the list
       Tags:
       - Key: Name
-        Value: !Sub ${AWS::StackName}-Public-A
-        
+        Value: !Sub ${AWS::StackName}-Public-C
+
   # InternetGateway and attachment
   csye6225InternetGateway:
     Type: AWS::EC2::InternetGateway
@@ -74,3 +74,22 @@ Resources:
       RouteTableId: !Ref csye6225PublicRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref csye6225InternetGateway
+
+  # Attach the public subnets to public route tables,
+  PublicSubnetARouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetA
+      RouteTableId: !Ref csye6225PublicRouteTable
+
+  PublicSubnetBRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetB
+      RouteTableId: !Ref csye6225PublicRouteTable
+
+  PublicSubnetCRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnetC
+      RouteTableId: !Ref csye6225PublicRouteTable
