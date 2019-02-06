@@ -43,6 +43,12 @@ route_table_id=$( aws ec2 create-route-table --vpc-id $id | jq '.RouteTable.Rout
 if [ -z "$route_table_id" ];then
 	exit 0
 fi
+aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id1
+echo "Successfully associate route table with subnet1"
+aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id2
+echo "Successfully associate route table with subnet2"
+aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id3
+echo "Successfully associate route table with subnet3"
 echo "Successfully create route table :" $route_table_id
 aws ec2 create-route --route-table-id $route_table_id --destination-cidr-block 0.0.0.0/0 --gateway-id $gateway_id
 echo "Successfully create route "
