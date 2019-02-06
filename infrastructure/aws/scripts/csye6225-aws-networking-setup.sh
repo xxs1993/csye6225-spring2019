@@ -10,6 +10,10 @@ fi
 echo $id
 echo "Please input the VPC name prefix, the whole name will be PREFIX-csye6225-vpc"
 read name
+if [ -z "$name" ];then
+	echo "VPC name cannot be empty"
+	read name
+fi
 name=$name"-csye6225-"
 vpc_name=$name"vpc"
 ## add VPC tag name
@@ -43,12 +47,18 @@ route_table_id=$( aws ec2 create-route-table --vpc-id $id | jq '.RouteTable.Rout
 if [ -z "$route_table_id" ];then
 	exit 0
 fi
-aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id1
-echo "Successfully associate route table with subnet1"
-aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id2
-echo "Successfully associate route table with subnet2"
-aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id3
-echo "Successfully associate route table with subnet3"
 echo "Successfully create route table :" $route_table_id
+associate_route_table(){
+aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $1
+echo "Successfully associate route table with subnet :"$1
+
+}
+associate_route_table $subnet_id1
+associate_route_table $subnet_id2
+associate_route_table $subnet_id3
+# aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id2
+# echo "Successfully associate route table with subnet2"
+# aws ec2 associate-route-table --route-table-id $route_table_id --subnet-id $subnet_id3
+# echo "Successfully associate route table with subnet3"
 aws ec2 create-route --route-table-id $route_table_id --destination-cidr-block 0.0.0.0/0 --gateway-id $gateway_id
 echo "Successfully create route "
