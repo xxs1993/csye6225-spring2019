@@ -24,9 +24,15 @@ while [ $subnetId_length -eq 0 ]; do
 	tables=$( echo "$route_table" | jq '.RouteTables' | jq '.[1]' )
 	associations=$( echo "$tables" | jq '.Associations' | jq '.[0]')
 	subnet_id=$( echo "$associations" | jq '.SubnetId' | sed 's/\"//g' )
+	subnetId_length=$( echo "$associations" | jq '.SubnetId | length')
 	break
 done
 # echo $subnet_id
+
+if [ "$subnetId_length" -eq 0 ]; then
+	echo "Wrong Information!"
+	exit 0
+fi
 
 associations1=$( echo "$tables" | jq '.Associations' | jq '.[1]' )
 # # echo $associations1
@@ -46,11 +52,6 @@ routes=$( echo "$tables" | jq '.Routes' | jq '.[1]' )
 gateway_id=$( echo "$routes" | jq '.GatewayId' | sed 's/\"//g' )
 # echo $gateway_id
 
-# if [ "$subnetId_length" -eq 0 ];then
-# 	echo "Wrong Information!"
-# 	exit 0
-# fi
-
 aws ec2 delete-subnet --subnet-id $subnet_id
 echo " Delete Subnet1..." $subnet_id
 aws ec2 delete-subnet --subnet-id $subnet_id1
@@ -65,6 +66,3 @@ aws ec2 delete-internet-gateway --internet-gateway-id $gateway_id
 echo "Successfully Delete VPC!" $name
 aws ec2 delete-vpc --vpc-id $name
 echo "Bye!"
-
-
-
