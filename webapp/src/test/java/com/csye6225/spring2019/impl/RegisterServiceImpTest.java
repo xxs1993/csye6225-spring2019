@@ -59,6 +59,7 @@ public class RegisterServiceImpTest {
 
         //test if account was already existed
         a.setEmailAddress("a@gmail.com");
+        userRepository.insertAccount(a);
         Account a1=new Account();
         a1.setEmailAddress("a@gmail.com");
         a1.setPwdString("123456");
