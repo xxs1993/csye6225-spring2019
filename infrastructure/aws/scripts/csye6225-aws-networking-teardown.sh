@@ -12,44 +12,54 @@ route_table=$( aws ec2 describe-route-tables --filters Name=vpc-id,Values=$name 
 # echo $route_table
 # routetable_length=$( echo "$route_table" | jq '.RouteTables | length')
 # echo $routetable_length
-tables=$( echo "$route_table" | jq '.RouteTables' | jq '.[0]' )
-echo $tables
+
+tables=$( echo "$route_table" | jq '.RouteTables' | jq '.[1]' )
+# echo $tables
 associations=$( echo "$tables" | jq '.Associations' | jq '.[0]')
-echo $associations
+# echo $associations
 
 subnet_id=$( echo "$associations" | jq '.SubnetId' | sed 's/\"//g' )
+# echo $subnet_id
+
+if [ -z "$subnet_id" ];then
+	tables=$( echo "$route_table" | jq '.RouteTables' | jq '.[0]' )
+	associations=$( echo "$tables" | jq '.Associations' | jq '.[0]')
+	subnet_id=$( echo "$associations" | jq '.SubnetId' | sed 's/\"//g' )
+fi
 echo $subnet_id
-aws ec2 delete-subnet --subnet-id $subnet_id
 
 associations1=$( echo "$tables" | jq '.Associations' | jq '.[1]' )
 # # echo $associations1
 subnet_id1=$( echo "$associations1" | jq '.SubnetId' | sed 's/\"//g' )
 echo $subnet_id1
-aws ec2 delete-subnet --subnet-id $subnet_id1
 
 associations2=$( echo "$tables" | jq '.Associations' | jq '.[2]' )
 # # echo $associations2
 subnet_id2=$( echo "$associations2" | jq '.SubnetId' | sed 's/\"//g' )
 echo $subnet_id2
-aws ec2 delete-subnet --subnet-id $subnet_id2
 
 route_table_id=$( echo "$associations" | jq '.RouteTableId' | sed 's/\"//g' )
 echo $route_table_id
-
-# aws ec2 delete-subnet --subnet-id $subnet_id
-# aws ec2 delete-subnet --subnet-id $subnet_id1
-# aws ec2 delete-subnet --subnet-id $subnet_id2
-aws ec2 delete-route-table --route-table-id $route_table_id
-
 
 routes=$( echo "$tables" | jq '.Routes' | jq '.[1]' )
 # echo $routes
 gateway_id=$( echo "$routes" | jq '.GatewayId' | sed 's/\"//g' )
 echo $gateway_id
-aws ec2 detach-internet-gateway --internet-gateway-id $gateway_id --vpc-id $name
-aws ec2 delete-internet-gateway --internet-gateway-id $gateway_id
-aws ec2 delete-vpc --vpc-id $name
 
+# aws ec2 delete-subnet --subnet-id $subnet_id
+# echo "Successfully delete Subnet1"
+# aws ec2 delete-subnet --subnet-id $subnet_id1
+# echo "Successfully delete Subnet2"
+# aws ec2 delete-subnet --subnet-id $subnet_id2
+# echo "Successfully delete Subnet3"
+# aws ec2 delete-route-table --route-table-id $route_table_id
+# echo "Successfully delete Route Table"
+# aws ec2 detach-internet-gateway --internet-gateway-id $gateway_id --vpc-id $name
+# echo "Successfully detach Internet GateWay"
+# aws ec2 delete-internet-gateway --internet-gateway-id $gateway_id
+# echo "Successfully delete VPC"
+# aws ec2 delete-vpc --vpc-id $name
+# echo "Bye!"
 
 
 
@@ -74,5 +84,4 @@ aws ec2 delete-vpc --vpc-id $name
 # done
 
 
-# aws ec2 delete-route-table --route-table-id rtb-22574640
 
