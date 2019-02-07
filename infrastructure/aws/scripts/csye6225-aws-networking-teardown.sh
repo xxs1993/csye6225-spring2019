@@ -9,40 +9,46 @@ aws ec2 describe-vpcs
 echo "Please input the vpc id:"
 read name
 route_table=$( aws ec2 describe-route-tables --filters Name=vpc-id,Values=$name )
-echo $route_table
+# echo $route_table
 # routetable_length=$( echo "$route_table" | jq '.RouteTables | length')
 # echo $routetable_length
-tables=$( echo "$route_table" | jq '.RouteTables' | jq '.[]' )
-# echo $tables
-associations=$( echo "$tables" | jq '.Associations' | jq '.[0]' )
-# echo $associations
+tables=$( echo "$route_table" | jq '.RouteTables' | jq '.[0]' )
+echo $tables
+associations=$( echo "$tables" | jq '.Associations' | jq '.[0]')
+echo $associations
+
 subnet_id=$( echo "$associations" | jq '.SubnetId' | sed 's/\"//g' )
 echo $subnet_id
-route_table_id=$( echo "$associations" | jq '.RouteTableId' | sed 's/\"//g' )
-# echo $route_table_id
+aws ec2 delete-subnet --subnet-id $subnet_id
 
 associations1=$( echo "$tables" | jq '.Associations' | jq '.[1]' )
-# echo $associations1
-subnet_id1=$( echo "$associations1" | jq '.SubnetId' | sed 's/\"//g' )Z
-# echo $subnet_id1
+# # echo $associations1
+subnet_id1=$( echo "$associations1" | jq '.SubnetId' | sed 's/\"//g' )
+echo $subnet_id1
+aws ec2 delete-subnet --subnet-id $subnet_id1
 
 associations2=$( echo "$tables" | jq '.Associations' | jq '.[2]' )
-# echo $associations2
+# # echo $associations2
 subnet_id2=$( echo "$associations2" | jq '.SubnetId' | sed 's/\"//g' )
-# echo $subnet_id2
+echo $subnet_id2
+aws ec2 delete-subnet --subnet-id $subnet_id2
+
+route_table_id=$( echo "$associations" | jq '.RouteTableId' | sed 's/\"//g' )
+echo $route_table_id
+
 # aws ec2 delete-subnet --subnet-id $subnet_id
 # aws ec2 delete-subnet --subnet-id $subnet_id1
 # aws ec2 delete-subnet --subnet-id $subnet_id2
-# aws ec2 delete-route-table --route-table-id $route_table_id
+aws ec2 delete-route-table --route-table-id $route_table_id
 
 
 routes=$( echo "$tables" | jq '.Routes' | jq '.[1]' )
 # echo $routes
 gateway_id=$( echo "$routes" | jq '.GatewayId' | sed 's/\"//g' )
-# echo $gateway_id
-# aws ec2 detach-internet-gateway --internet-gateway-id $gateway_id --vpc-id $name
-# aws ec2 delete-internet-gateway --internet-gateway-id $gateway_id
-# aws ec2 delete-vpc --vpc-id $name
+echo $gateway_id
+aws ec2 detach-internet-gateway --internet-gateway-id $gateway_id --vpc-id $name
+aws ec2 delete-internet-gateway --internet-gateway-id $gateway_id
+aws ec2 delete-vpc --vpc-id $name
 
 
 
