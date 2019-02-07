@@ -62,3 +62,11 @@ associate_route_table $subnet_id3
 # echo "Successfully associate route table with subnet3"
 aws ec2 create-route --route-table-id $route_table_id --destination-cidr-block 0.0.0.0/0 --gateway-id $gateway_id
 echo "Successfully create route "
+
+
+echo "Please input the security_group_id:"
+read sgi
+json=`aws ec2 describe-security-groups --group-id ${sgi} --query "SecurityGroups[0].IpPermissions"`
+aws ec2 revoke-security-group-ingress --cli-input-json "{\"GroupId\":\"${sgi}\",\"IpPermissions\":$json}"
+aws ec2 authorize-security-group-ingress --group-id ${sgi} --ip-permissions IpProtocol=tcp,FromPort=20,ToPort=80,IpRanges='[{CidrIp=0.0.0.0/0}]'
+echo "Successfully create a new rule."
