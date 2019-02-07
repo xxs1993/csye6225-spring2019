@@ -3,7 +3,7 @@ set -e
 re=$( aws ec2 create-vpc --cidr-block "10.0.0.0/16" )
 
 echo "Successfully creating vpc: "$re
-id=$( echo $re | jq '.Vpc.VpcId' | sed 's/\"//g' ) 
+id=$( echo $re | jq '.Vpc.VpcId' | sed 's/\"//g' )
 if [ -z "$id" ];then
 	exit 0
 fi
@@ -18,18 +18,18 @@ name=$name"-csye6225-"
 vpc_name=$name"vpc"
 ## add VPC tag name
 aws ec2 create-tags --resources $id --tags Key=Name,Value=$vpc_name
-## create subnet1 
+## create subnet1
 subnet_id1=$( aws ec2 create-subnet --availability-zone us-east-1a --cidr-block 10.0.1.0/24 --vpc-id $id | jq '.Subnet.SubnetId' | sed 's/\"//g' )
 if [ -z "$subnet_id1" ];then
 	exit 0
 fi
-echo "Successfully create subnet1 : " $subnet_id1 
+echo "Successfully create subnet1 : " $subnet_id1
 ## create subnet2
 subnet_id2=$( aws ec2 create-subnet --availability-zone us-east-1b --cidr-block 10.0.2.0/24 --vpc-id $id | jq '.Subnet.SubnetId' | sed 's/\"//g' )
 if [ -z "$subnet_id2" ];then
 	exit 0
 fi
-echo "Successfully create subnet2 : " $subnet_id2 
+echo "Successfully create subnet2 : " $subnet_id2
 ##create subnet3
 subnet_id3=$( aws ec2 create-subnet --availability-zone us-east-1c --cidr-block 10.0.3.0/24 --vpc-id $id | jq '.Subnet.SubnetId' | sed 's/\"//g' )
 if [ -z "$subnet_id3" ];then
@@ -40,7 +40,7 @@ gateway_id=$( aws ec2 create-internet-gateway | jq '.InternetGateway.InternetGat
 if [ -z "$gateway_id" ];then
 	exit 0
 fi
-echo "Successfully create Internet gateway : " $gateway_id 
+echo "Successfully create Internet gateway : " $gateway_id
 aws ec2 attach-internet-gateway --internet-gateway-id $gateway_id --vpc-id $id
 echo "Successfully attach gateway to vpc "
 route_table_id=$( aws ec2 create-route-table --vpc-id $id | jq '.RouteTable.RouteTableId' | sed 's/\"//g')
@@ -69,9 +69,13 @@ sgi=`aws ec2 describe-security-groups --filters Name=vpc-id,Values=$id --query "
 #read sgi
 json=`aws ec2 describe-security-groups --group-id ${sgi} --query "SecurityGroups[0].IpPermissions"`
 aws ec2 revoke-security-group-ingress --cli-input-json "{\"GroupId\":\"${sgi}\",\"IpPermissions\":$json}"
+jsonOut=`aws ec2 describe-security-groups --group-id ${sgi} --query "SecurityGroups[0].IpPermissionsEgress"`
+aws ec2 revoke-security-group-egress --cli-input-json "{\"GroupId\":\"${sgi}\",\"IpPermissions\":$jsonOut}"
 echo "Seuccessfully delete the default security group rule"
 #add a new rule
 aws ec2 authorize-security-group-ingress --group-id ${sgi} --protocol tcp --port 22 --cidr 0.0.0.0/0
 aws ec2 authorize-security-group-ingress --group-id ${sgi} --protocol tcp --port 80 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-egress --group-id ${sgi} --protocol tcp --port 22 --cidr 0.0.0.0/0
+aws ec2 authorize-security-group-egress --group-id ${sgi} --protocol tcp --port 80 --cidr 0.0.0.0/0
 echo "Successfully create two new rules: protocol: tcp, port: 22 and 80, cidr:0.0.0.0/0."
 echo "Goodbye."
