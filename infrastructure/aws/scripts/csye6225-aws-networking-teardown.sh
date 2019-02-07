@@ -46,6 +46,11 @@ routes=$( echo "$tables" | jq '.Routes' | jq '.[1]' )
 gateway_id=$( echo "$routes" | jq '.GatewayId' | sed 's/\"//g' )
 # echo $gateway_id
 
+# if [ "$subnetId_length" -eq 0 ];then
+# 	echo "Wrong Information!"
+# 	exit 0
+# fi
+
 aws ec2 delete-subnet --subnet-id $subnet_id
 echo " Delete Subnet1..." $subnet_id
 aws ec2 delete-subnet --subnet-id $subnet_id1
@@ -60,5 +65,6 @@ aws ec2 delete-internet-gateway --internet-gateway-id $gateway_id
 echo "Successfully Delete VPC!" $name
 aws ec2 delete-vpc --vpc-id $name
 echo "Bye!"
+
 
 
