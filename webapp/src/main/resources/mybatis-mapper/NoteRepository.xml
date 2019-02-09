@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.csye6225.spring2019.repository.NoteRepository">
+    <resultMap id="result" type="com.csye6225.spring2019.entity.Note">
+        <id column="ID" property="id"/>
+        <result column="USER_ID" property="userId"/>
+        <result column="TITLE" property="title"/>
+        <result column="CONTENT" property="content"/>
+    </resultMap>
+    <sql id="sql">
+        USER_ID,TITLE,CONTENT
+    </sql>
+
+    <select id="getNoteByNoteId" resultMap="result">
+        select  ID,<include refid="sql"/> from Note
+        <where>
+            id=#{id}
+        </where>
+    </select>
+
+    <select id="listNoteByUserIdAndTitle" resultMap="result" parameterType="map">
+        select ID,<include refid="sql"/> from Note
+        <where>
+            user_id =#{userId}
+            <if test="title==null or title==''">
+                and title=#{title}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateNoteTitleAndContentById" parameterType="com.csye6225.spring2019.entity.Note">
+        update Note set content=#{content},title =#{title}
+        where id=#{id}
+    </update>
+
+    <insert id="insertNewNote" parameterType="com.csye6225.spring2019.entity.Note">
+        <selectKey keyColumn="id" keyProperty="id" resultType="int">
+            select last_insert_id()
+        </selectKey>
+        insert into Note ( <include refid="sql"/> ) values
+        (#{userId},#{title},#{content})
+    </insert>
+
+    <delete id="deleteNoteById" parameterType="int">
+        delete from Note where id=#{id}
+    </delete>
+</mapper>
+
+
