@@ -29,6 +29,13 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public List<Note> findAll(int id) {
+
+        return null;
+
+    }
+
+    @Override
+    public Note getNoteByNoteId(int id) {
         return null;
     }
 
