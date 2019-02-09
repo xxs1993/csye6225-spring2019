@@ -3,9 +3,11 @@ package com.csye6225.spring2019.controller;
 import com.csye6225.spring2019.entity.Account;
 import com.csye6225.spring2019.entity.Note;
 import com.csye6225.spring2019.filter.Verifier;
+import com.csye6225.spring2019.repository.UserRepository;
 import com.csye6225.spring2019.service.NoteService;
 import com.csye6225.spring2019.service.RegisterService;
-import jdk.internal.joptsimple.internal.Strings;
+
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
-import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import static javax.servlet.http.HttpServletResponse.*;
 
 @RestController
 public class NoteController {
@@ -28,6 +29,7 @@ public class NoteController {
     NoteService noteService;
     @Autowired
     RegisterService registerService;
+
 
     @GetMapping("/note")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
@@ -39,7 +41,9 @@ public class NoteController {
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
         }
         else{
-            res.setData(noteService.findAll(account));
+            account = registerService.findByEmail(account.getEmailAddress());
+            Integer id = account.getId();
+            res.setData(noteService.findAll(id));
         }
         return res;
     }
@@ -58,6 +62,8 @@ public class NoteController {
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
             }
+            httpServletResponse.setStatus(SC_CREATED);
+           // httpServletResponse.se(SC_CREATED,"created");
             Note userNote = new Note();
             String content = note.getContent();
             String title = note.getTitle();
