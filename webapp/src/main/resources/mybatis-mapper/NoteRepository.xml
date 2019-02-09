@@ -8,20 +8,22 @@
         <result column="USER_ID" property="userId"/>
         <result column="TITLE" property="title"/>
         <result column="CONTENT" property="content"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
     </resultMap>
     <sql id="sql">
-        USER_ID,TITLE,CONTENT
+        USER_ID,TITLE,CONTENT,CREATE_TIME,UPDATE_TIME
     </sql>
 
     <select id="getNoteByNoteId" resultMap="result">
-        select  ID,<include refid="sql"/> from Note
+        select  ID,<include refid="sql"/> from note
         <where>
             id=#{id}
         </where>
     </select>
 
     <select id="listNoteByUserIdAndTitle" resultMap="result" parameterType="map">
-        select ID,<include refid="sql"/> from Note
+        select ID,<include refid="sql"/> from note
         <where>
             user_id =#{userId}
             <if test="title==null or title==''">
@@ -31,7 +33,7 @@
     </select>
 
     <update id="updateNoteTitleAndContentById" parameterType="com.csye6225.spring2019.entity.Note">
-        update Note set content=#{content},title =#{title}
+        update note set content=#{content},title =#{title}
         where id=#{id}
     </update>
 
@@ -39,12 +41,12 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="int">
             select last_insert_id()
         </selectKey>
-        insert into Note ( <include refid="sql"/> ) values
-        (#{userId},#{title},#{content})
+        insert into note ( <include refid="sql"/> ) values
+        (#{userId},#{title},#{content},#{createTime},#{updateTime})
     </insert>
 
     <delete id="deleteNoteById" parameterType="int">
-        delete from Note where id=#{id}
+        delete from note where id=#{id}
     </delete>
 </mapper>
 
