@@ -66,4 +66,9 @@ public class RegisterServiceImp implements RegisterService {
         return true;
     }
 
+    @Override
+    public Account findByEmail(String email) {
+        return null;
+    }
+
 }
