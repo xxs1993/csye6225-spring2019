@@ -21,6 +21,9 @@
     </select>
 
     <insert id="insertAccount" parameterType="com.csye6225.spring2019.entity.Account">
+      <selectKey keyProperty="id" resultType="int" keyColumn="id">
+          select last_insert_id()
+      </selectKey>
       insert into user (EMAIL_ADDRESS,PWD_STRING)
       values (#{emailAddress},#{pwdString})
     </insert>
