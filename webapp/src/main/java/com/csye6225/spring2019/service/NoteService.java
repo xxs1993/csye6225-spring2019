@@ -10,6 +10,6 @@ public interface NoteService {
 
     boolean addNewNote(Note note);
     List<Note> findAll(int id);
-    Note getNoteByNoteId (int id);
+    Note getNoteByNoteId (Account account, int id);
 
 }

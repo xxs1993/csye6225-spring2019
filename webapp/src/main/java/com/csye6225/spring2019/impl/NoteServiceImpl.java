@@ -29,14 +29,24 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public List<Note> findAll(int id) {
-
-        return null;
+        if ((Integer)id == null)
+            return null;
+        Note note=noteRepository.getNoteByNoteId(id);
+        String title = note.getTitle();
+        List<Note> list=noteRepository.listNoteByUserIdAndTitle(id, title);
+        return list;
 
     }
 
     @Override
-    public Note getNoteByNoteId(int id) {
-        return null;
+    public Note getNoteByNoteId(Account account, int id) {
+        if((Integer)id ==null)
+            return null;
+        Note note = noteRepository.getNoteByNoteId(id);
+        if (account.getId() != note.getUserId())
+            return null;
+        else
+            return note;
     }
 
 }
