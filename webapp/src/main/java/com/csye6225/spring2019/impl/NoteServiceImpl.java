@@ -44,7 +44,7 @@ public class NoteServiceImpl implements NoteService{
 
     @Override
     public Note getNoteByNoteId(Account account, int id) {
-        if(String.valueOf(id) ==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+        if(String.valueOf(id)==null || Strings.isNullOrEmpty(account.getEmailAddress()))
             return null;
         Note note = noteRepository.getNoteByNoteId(id);
         if (account.getId() != note.getUserId()) {
@@ -56,13 +56,29 @@ public class NoteServiceImpl implements NoteService{
     }
 
     @Override
-    public Note deleteNoteByNoteId(Account account, int id) {
-        return null;
+    public boolean deleteNoteByNoteId(Account account, int id) {
+        if(String.valueOf(id)==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+            return false;
+        Note note= noteRepository.getNoteByNoteId(id);
+        if (account.getId() != note.getUserId()){
+            log.warn("Your are not authorized to delete this note");
+            return false;
+        }
+        noteRepository.deleteNoteById(id);
+        return true;
     }
 
     @Override
-    public Note updateNoteByNoteId(Account account, int id) {
-        return null;
+    public boolean updateNoteByNoteId(Account account, int id) {
+        if(String.valueOf(id)==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+            return false;
+        Note note=noteRepository.getNoteByNoteId(id);
+        if(account.getId() != note.getUserId()){
+            log.warn("Your are not authorized to update this note");
+            return false;
+        }
+        noteRepository.updateNoteTitleAndContentById(note);
+        return true;
     }
 
 }
