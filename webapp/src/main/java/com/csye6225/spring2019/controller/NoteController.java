@@ -8,6 +8,16 @@ import com.csye6225.spring2019.service.RegisterService;
 import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import com.csye6225.spring2019.repository.UserRepository;
+import com.csye6225.spring2019.service.NoteService;
+import com.csye6225.spring2019.service.RegisterService;
+
+import com.google.common.base.Strings;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,6 +29,10 @@ import java.util.List;
 
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
+import java.util.ArrayList;
+import java.util.List;
+
+import static javax.servlet.http.HttpServletResponse.*;
 
 @RestController
 public class NoteController {
@@ -27,6 +41,7 @@ public class NoteController {
     NoteService noteService;
     @Autowired
     RegisterService registerService;
+
 
     @GetMapping("/note")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
@@ -38,7 +53,8 @@ public class NoteController {
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
         }
         else{
-            res.setData(noteService.findAll(account));
+            account = registerService.findByEmail(account.getEmailAddress());
+            Integer id = account.getId();
         }
         return res;
     }
@@ -57,6 +73,8 @@ public class NoteController {
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
             }
+            httpServletResponse.setStatus(SC_CREATED);
+           // httpServletResponse.se(SC_CREATED,"created");
             Note userNote = new Note();
             String content = note.getContent();
             String title = note.getTitle();
@@ -66,7 +84,6 @@ public class NoteController {
         }
         return res;
     }
-
 
     @GetMapping("/note/{id}")
     public Result<List<Note>> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable int noteId) throws IOException{
@@ -117,7 +134,7 @@ public class NoteController {
         }
         else{
             String email = account.getEmailAddress();
-            Account user = registerService.searchAccountByEmailAddress(email);
+            Account user = registerService.findByEmail(email);
             int userId = user.getId();
             noteService.deleteNoteById(userId,noteId);
             res.setStatusCode(200);
@@ -125,5 +142,4 @@ public class NoteController {
         }
         return res;
     }
-
 }
