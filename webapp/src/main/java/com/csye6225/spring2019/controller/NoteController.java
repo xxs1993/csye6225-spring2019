@@ -100,7 +100,7 @@ public class NoteController {
             userNote.setContent(content);
             userNote.setTitle(title);
             userNote.setUserId(userId);
-            noteService.setNoteById(userNote,noteId);
+            noteService.updateNoteById(userNote,noteId);
             res.setData(userNote);
         }
         return res;
