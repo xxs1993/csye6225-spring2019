@@ -55,4 +55,14 @@ public class NoteServiceImpl implements NoteService{
             return note;
     }
 
+    @Override
+    public Note deleteNoteByNoteId(Account account, int id) {
+        return null;
+    }
+
+    @Override
+    public Note updateNoteByNoteId(Account account, int id) {
+        return null;
+    }
+
 }

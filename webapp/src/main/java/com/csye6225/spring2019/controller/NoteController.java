@@ -95,7 +95,7 @@ public class NoteController {
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
         }
         else{
-            res.setData(noteService.getNoteById(account, noteId));
+            res.setData(noteService.getNoteByNoteId(account, noteId));
         }
         return res;
     }
@@ -117,7 +117,7 @@ public class NoteController {
             userNote.setContent(content);
             userNote.setTitle(title);
             userNote.setUserId(userId);
-            noteService.updateNote(userId,userNote);
+            noteService.updateNoteByNoteId(userId,userNote);
             res.setData(userNote);
         }
         return res;
@@ -135,8 +135,7 @@ public class NoteController {
         else{
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
-            int userId = user.getId();
-            noteService.deleteNoteById(userId,noteId);
+            noteService.deleteNoteByNoteId(user,noteId);
             res.setStatusCode(200);
             res.setMessage("register successful");
         }
