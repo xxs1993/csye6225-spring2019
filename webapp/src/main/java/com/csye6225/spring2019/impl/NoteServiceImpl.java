@@ -29,14 +29,39 @@ public class NoteServiceImpl implements NoteService{
 
 
     @Override
-    public List<Note> findAll(int id) {
-
-        return null;
+    public List<Note> findAll(Account account, int id) {
+        if (String.valueOf(id) == null || Strings.isNullOrEmpty(account.getEmailAddress()))
+            return null;
+        Note note=noteRepository.getNoteByNoteId(id);
+        if (account.getId() != note.getUserId()) {
+            log.warn("Your are not authorized to get notes");
+            return null;
+        }
+        List<Note> list=noteRepository.listNoteByUserIdAndTitle(id, null);
+        return list;
 
     }
 
     @Override
-    public Note getNoteByNoteId(int id) {
+    public Note getNoteByNoteId(Account account, int id) {
+        if(String.valueOf(id) ==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+            return null;
+        Note note = noteRepository.getNoteByNoteId(id);
+        if (account.getId() != note.getUserId()) {
+            log.warn("Your are not authorized to get this note");
+            return null;
+        }
+        else
+            return note;
+    }
+
+    @Override
+    public Note deleteNoteByNoteId(Account account, int id) {
+        return null;
+    }
+
+    @Override
+    public Note updateNoteByNoteId(Account account, int id) {
         return null;
     }
 

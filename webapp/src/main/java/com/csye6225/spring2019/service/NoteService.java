@@ -7,7 +7,11 @@ import com.csye6225.spring2019.impl.NoteServiceImpl;
 import java.util.List;
 
 public interface NoteService {
+
     boolean addNewNote(Note note);
-    List<Note> findAll(int id);
-    Note getNoteByNoteId (int id);
+    List<Note> findAll(Account account, int id);
+    Note getNoteByNoteId (Account account, int id);
+    Note deleteNoteByNoteId (Account account, int id);
+    Note updateNoteByNoteId (Account account, int id);
+
 }
