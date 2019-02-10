@@ -17,10 +17,12 @@ public class NoteServiceImpl implements NoteService {
 
     public boolean addNewNote(Note note){
         if(note==null||note.getUserId()<=0|| Strings.isNullOrEmpty(note.getTitle())){
-            log.warn("Laking data for add a new note");
+            log.warn("Lacking data for add a new note");
             return false;
         }
         int re = noteRepository.insertNewNote(note);
         return re>0;
     }
+
+
 }

@@ -18,4 +18,6 @@ public class Note {
     private String content;
     private Timestamp createTime;
     private Timestamp updateTime;
+
+
 }
