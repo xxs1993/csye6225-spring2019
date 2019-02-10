@@ -44,6 +44,8 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
     email_address VARCHAR(255),
     pwd_string VARCHAR(255)
 )
+
+CREATE TABLE csye6225.`note` (   `id` int(11) NOT NULL AUTO_INCREMENT,   `user_id` int(11) DEFAULT '0',   `title` varchar(255) DEFAULT '',   `content` varchar(255) DEFAULT '',   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,   `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,   PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 ```
 
  
