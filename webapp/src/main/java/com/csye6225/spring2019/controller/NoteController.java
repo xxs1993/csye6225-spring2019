@@ -43,7 +43,7 @@ public class NoteController {
         else{
             account = registerService.findByEmail(account.getEmailAddress());
             Integer id = account.getId();
-            res.setData(noteService.findAll(id));
+            res.setData(noteService.findAll(account,id));
         }
         return res;
     }
