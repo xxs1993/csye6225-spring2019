@@ -9,9 +9,10 @@ import java.util.List;
 public interface NoteService {
 
     boolean addNewNote(Note note);
-    List<Note> findAll(Account account, int id);
-    Note getNoteByNoteId (Account account, int id);
-    boolean deleteNoteByNoteId (Account account, int id);
-    boolean updateNoteByNoteId (Account account, int id);
+    List<Note> findAll(int userId);
+    List<Note> findAll(int userId,String title);
+    Note getNoteByNoteId (String id);
+    boolean deleteNoteByNoteId (String id);
+    boolean updateNoteByNoteId ( String id);
 
 }

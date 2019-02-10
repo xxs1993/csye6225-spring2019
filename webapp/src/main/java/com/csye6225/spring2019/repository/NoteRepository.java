@@ -11,13 +11,13 @@ import java.util.List;
 @Mapper
 public interface NoteRepository {
 
-    Note getNoteByNoteId(@Param("id")int id);
+    Note getNoteByNoteId(@Param("id")String id);
 
     List<Note> listNoteByUserIdAndTitle(@Param("userId")int userId,@Param("title")String title);
 
     int updateNoteTitleAndContentById(Note note);
 
-    int deleteNoteById(@Param("id")int id);
+    int deleteNoteById(@Param("id")String id);
 
     int insertNewNote(Note note);
 }
