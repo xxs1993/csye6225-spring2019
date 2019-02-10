@@ -33,7 +33,7 @@ public class NoteServiceImpl implements NoteService{
             return null;
         Note note=noteRepository.getNoteByNoteId(id);
         if (account.getId() != note.getUserId()) {
-            log.warn("Your are not authorized to get this note");
+            log.warn("Your are not authorized to get notes");
             return null;
         }
         String title = note.getTitle();
