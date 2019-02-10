@@ -54,7 +54,8 @@ public class NoteController {
         }
         else{
             account = registerService.findByEmail(account.getEmailAddress());
-            Integer id = account.getId();
+            int id = account.getId();
+            res.setData(noteService.findAll(account,id));
         }
         return res;
     }
@@ -80,6 +81,7 @@ public class NoteController {
             String title = note.getTitle();
             userNote.setContent(content);
             userNote.setTitle(title);
+            noteService.addNewNote(userNote);
             res.setData(userNote);
         }
         return res;
