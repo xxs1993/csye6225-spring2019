@@ -8,13 +8,15 @@
         <result column="USER_ID" property="userId"/>
         <result column="TITLE" property="title"/>
         <result column="CONTENT" property="content"/>
+        <result column="CREATE_TIME" property="createTime"/>
+        <result column="UPDATE_TIME" property="updateTime"/>
     </resultMap>
     <sql id="sql">
-        USER_ID,TITLE,CONTENT
+        USER_ID,TITLE,CONTENT,CREATE_TIME,UPDATE_TIME
     </sql>
 
     <select id="getNoteByNoteId" resultMap="result">
-        select  ID,<include refid="sql"/> from Note
+        select  ID,<include refid="sql"/> from note
         <where>
             id=#{id}
         </where>
@@ -45,6 +47,12 @@
 
     <delete id="deleteNoteById" parameterType="int">
         delete from Note where id=#{id}
+        insert into note ( <include refid="sql"/> ) values
+        (#{userId},#{title},#{content},#{createTime},#{updateTime})
+    </insert>
+
+    <delete id="deleteNoteById" parameterType="int">
+        delete from note where id=#{id}
     </delete>
 </mapper>
 

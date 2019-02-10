@@ -67,8 +67,11 @@ public class RegisterServiceImp implements RegisterService {
     }
 
     @Override
-    public Account searchAccountByEmailAddress(String emailAddress) {
-        return userRepository.findByEmailAddress(emailAddress);
+    public Account findByEmail(String email) {
+        if(email == null || email.isEmpty())
+            return null;
+        Account a=userRepository.findByEmailAddress(email);
+        return a;
     }
 
 }
