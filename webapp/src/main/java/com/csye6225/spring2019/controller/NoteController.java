@@ -86,8 +86,8 @@ public class NoteController {
     }
 
     @GetMapping("/note/{id}")
-    public Result<List<Note>> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable int noteId) throws IOException{
-        Result<List<Note>> res = new Result<>();
+    public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable int noteId) throws IOException{
+        Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
         if(account == null || !registerService.checkAccount(account)){
@@ -95,7 +95,9 @@ public class NoteController {
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
         }
         else{
-            res.setData(noteService.getNoteByNoteId(account, noteId));
+            String email = account.getEmailAddress();
+            Account user = registerService.findByEmail(email);
+            res.setData(noteService.getNoteByNoteId(user, noteId));
         }
         return res;
     }
