@@ -117,7 +117,7 @@ public class NoteController {
             userNote.setContent(content);
             userNote.setTitle(title);
             userNote.setUserId(userId);
-            noteService.updateNoteByNoteId(userId,userNote);
+            noteService.updateNoteByNoteId(account,noteId);
             res.setData(userNote);
         }
         return res;
