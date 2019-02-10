@@ -41,15 +41,10 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="int">
             select last_insert_id()
         </selectKey>
-        insert into Note ( <include refid="sql"/> ) values
-        (#{userId},#{title},#{content})
-    </insert>
-
-    <delete id="deleteNoteById" parameterType="int">
-        delete from Note where id=#{id}
         insert into note ( <include refid="sql"/> ) values
         (#{userId},#{title},#{content},#{createTime},#{updateTime})
     </insert>
+
 
     <delete id="deleteNoteById" parameterType="int">
         delete from note where id=#{id}
