@@ -46,7 +46,7 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
 )
 
 CREATE TABLE csye6225.`note` ( 
-	`id` varchar(36) NOT NULL AUTO_INCREMENT,  
+	`id` varchar(36) NOT NULL ,  
 	`user_id` int(11) DEFAULT '0',   
 	`title` varchar(255) DEFAULT '',   
 	`content` varchar(255) DEFAULT '',   
