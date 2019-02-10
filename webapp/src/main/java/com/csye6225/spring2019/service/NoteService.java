@@ -11,7 +11,7 @@ public interface NoteService {
     boolean addNewNote(Note note);
     List<Note> findAll(Account account, int id);
     Note getNoteByNoteId (Account account, int id);
-//    Note deleteNoteById (Account account, int id);
-//    Note updateNoteById (Account account, int id);
+    //    Note deleteNoteById (Account account, int id);
+    //    Note updateNoteById (Account account, int id);
 
 }

@@ -37,8 +37,7 @@ public class NoteServiceImpl implements NoteService{
             log.warn("Your are not authorized to get notes");
             return null;
         }
-        String title = note.getTitle();
-        List<Note> list=noteRepository.listNoteByUserIdAndTitle(id, title);
+        List<Note> list=noteRepository.listNoteByUserIdAndTitle(id, null);
         return list;
 
     }
