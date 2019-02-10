@@ -23,7 +23,7 @@
     </select>
 
     <select id="listNoteByUserIdAndTitle" resultMap="result" parameterType="map">
-        select ID,<include refid="sql"/> from note
+        select ID,<include refid="sql"/> from Note
         <where>
             user_id =#{userId}
             <if test="title==null or title==''">
@@ -33,7 +33,7 @@
     </select>
 
     <update id="updateNoteTitleAndContentById" parameterType="com.csye6225.spring2019.entity.Note">
-        update note set content=#{content},title =#{title}
+        update Note set content=#{content},title =#{title}
         where id=#{id}
     </update>
 
@@ -41,6 +41,12 @@
         <selectKey keyColumn="id" keyProperty="id" resultType="int">
             select last_insert_id()
         </selectKey>
+        insert into Note ( <include refid="sql"/> ) values
+        (#{userId},#{title},#{content})
+    </insert>
+
+    <delete id="deleteNoteById" parameterType="int">
+        delete from Note where id=#{id}
         insert into note ( <include refid="sql"/> ) values
         (#{userId},#{title},#{content},#{createTime},#{updateTime})
     </insert>
