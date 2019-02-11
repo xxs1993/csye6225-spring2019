@@ -14,5 +14,4 @@ public interface NoteService {
     Note getNoteByNoteId (String id);
     boolean deleteNoteByNoteId (String id);
     boolean updateNoteByNoteId ( String id);
-
 }
