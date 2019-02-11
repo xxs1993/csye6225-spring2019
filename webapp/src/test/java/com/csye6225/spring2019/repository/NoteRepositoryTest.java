@@ -3,6 +3,7 @@ package com.csye6225.spring2019.repository;
 
 import com.csye6225.spring2019.entity.Account;
 import com.csye6225.spring2019.entity.Note;
+import com.google.common.base.Strings;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
+import java.util.UUID;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -38,7 +40,7 @@ public class NoteRepositoryTest {
         note.setContent("dsss");
         int re = noteRepository.insertNewNote(note);
         Assert.assertTrue(re==1);
-        Assert.assertTrue(note.getId()>0);
+        Assert.assertFalse(Strings.isNullOrEmpty(note.getId()));
     }
 
     @Test
@@ -47,6 +49,11 @@ public class NoteRepositoryTest {
         List<Note> notes = noteRepository.listNoteByUserIdAndTitle(userId,"d");
         Assert.assertTrue(notes!=null && !notes
         .isEmpty());
+    }
+
+    @Test
+    public void test(){
+        System.out.println( "#################"+UUID.randomUUID().toString().length());
     }
     
 }

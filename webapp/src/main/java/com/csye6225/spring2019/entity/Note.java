@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @ToString
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Note {
-    private int id;
+    private String id;
     private int userId;
     private String title;
     private String content;

@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Log4j2
@@ -18,67 +19,60 @@ public class NoteServiceImpl implements NoteService{
     @Autowired
     private NoteRepository noteRepository;
 
+    @Override
     public boolean addNewNote(Note note){
         if(note==null||note.getUserId()<=0|| Strings.isNullOrEmpty(note.getTitle())){
             log.warn("Lacking data for add a new note");
             return false;
         }
+        note.setId(UUID.randomUUID().toString());
         int re = noteRepository.insertNewNote(note);
         return re>0;
     }
 
 
     @Override
-    public List<Note> findAll(Account account, int id) {
-        if (String.valueOf(id) == null || Strings.isNullOrEmpty(account.getEmailAddress()))
-            return null;
-        Note note=noteRepository.getNoteByNoteId(id);
-        if (account.getId() != note.getUserId()) {
-            log.warn("Your are not authorized to get notes");
+    public List<Note> findAll(int userId,String title) {
+        if (userId<=0) {
+            log.warn("No  user id found");
             return null;
         }
-        List<Note> list=noteRepository.listNoteByUserIdAndTitle(id, null);
+        List<Note> list=noteRepository.listNoteByUserIdAndTitle(userId, title);
         return list;
-
     }
 
     @Override
-    public Note getNoteByNoteId(Account account, int id) {
-        if(String.valueOf(id)==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+    public List<Note> findAll(int userId){
+        return findAll(userId,null);
+    }
+
+
+    @Override
+    public Note getNoteByNoteId(String id) {
+        if(Strings.isNullOrEmpty(id) )
             return null;
         Note note = noteRepository.getNoteByNoteId(id);
-        if (account.getId() != note.getUserId()) {
-            log.warn("Your are not authorized to get this note");
-            return null;
-        }
-        else
-            return note;
+
+        return note;
     }
 
     @Override
-    public boolean deleteNoteByNoteId(Account account, int id) {
-        if(String.valueOf(id)==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+    public boolean deleteNoteByNoteId( String id) {
+        if(Strings.isNullOrEmpty(id))
             return false;
-        Note note= noteRepository.getNoteByNoteId(id);
-        if (account.getId() != note.getUserId()){
-            log.warn("Your are not authorized to delete this note");
-            return false;
-        }
-        noteRepository.deleteNoteById(id);
-        return true;
+
+        int re = noteRepository.deleteNoteById(id);
+        return re>0;
     }
 
     @Override
-    public boolean updateNoteByNoteId(Account account, int id) {
-        if(String.valueOf(id)==null || Strings.isNullOrEmpty(account.getEmailAddress()))
+    public boolean updateNoteByNoteId(String id) {
+        if(Strings.isNullOrEmpty(id))
             return false;
         Note note=noteRepository.getNoteByNoteId(id);
-        if(account.getId() != note.getUserId()){
-            log.warn("Your are not authorized to update this note");
-            return false;
-        }
-        noteRepository.updateNoteTitleAndContentById(note);
-        return true;
+
+        int re = noteRepository.updateNoteTitleAndContentById(note);
+        return re>0;
     }
 
 }
