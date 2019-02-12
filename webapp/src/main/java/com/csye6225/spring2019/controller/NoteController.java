@@ -42,7 +42,7 @@ public class NoteController {
     @Autowired
     RegisterService registerService;
 
-/*
+
     @GetMapping("/note")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
         Result<List<Note>> res = new Result<>();
@@ -92,10 +92,9 @@ public class NoteController {
         return res;
     }
 
- */
 
     @GetMapping("/note/{id}")
-    public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId) throws IOException{
+    public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId) throws IOException{
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -117,7 +116,7 @@ public class NoteController {
     }
 
     @PutMapping("/note/{id}")
-    public Result<Note> putCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId, @RequestBody Note note) throws IOException{
+    public Result<Note> putCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId, @RequestBody Note note) throws IOException{
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -147,7 +146,7 @@ public class NoteController {
     }
 
     @DeleteMapping("/note/{id}")
-    public Result<String> deleteCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId) throws IOException {
+    public Result<String> deleteCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId) throws IOException {
         Result<String> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
