@@ -74,15 +74,16 @@ public class NoteController {
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
             }
-            httpServletResponse.setStatus(SC_CREATED);
            // httpServletResponse.se(SC_CREATED,"created");
-            Note userNote = new Note();
-            String content = note.getContent();
-            String title = note.getTitle();
-            userNote.setContent(content);
-            userNote.setTitle(title);
-            noteService.addNewNote(userNote);
-            res.setData(userNote);
+            account = registerService.findByEmail(account.getEmailAddress());
+            note.setUserId(account.getId());
+            note = noteService.addNewNote(note);
+            if(note == null){
+                httpServletResponse.sendError(SC_INTERNAL_SERVER_ERROR,"Unexpected error");
+            }
+            httpServletResponse.setStatus(SC_CREATED);
+
+            res.setData(note);
         }
         return res;
     }

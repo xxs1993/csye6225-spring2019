@@ -9,6 +9,8 @@ import com.google.common.base.Strings;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,14 +22,16 @@ public class NoteServiceImpl implements NoteService{
     private NoteRepository noteRepository;
 
     @Override
-    public boolean addNewNote(Note note){
+    public Note addNewNote(Note note){
         if(note==null||note.getUserId()<=0|| Strings.isNullOrEmpty(note.getTitle())){
             log.warn("Lacking data for add a new note");
-            return false;
+            return null;
         }
+        note.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        note.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         note.setId(UUID.randomUUID().toString());
         int re = noteRepository.insertNewNote(note);
-        return re>0;
+        return re>0?note:null;
     }
 
 
@@ -70,7 +74,7 @@ public class NoteServiceImpl implements NoteService{
         if(Strings.isNullOrEmpty(id))
             return false;
         Note note=noteRepository.getNoteByNoteId(id);
-
+        note.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         int re = noteRepository.updateNoteTitleAndContentById(note);
         return re>0;
     }

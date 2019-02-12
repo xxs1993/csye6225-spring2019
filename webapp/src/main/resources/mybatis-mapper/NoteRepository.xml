@@ -33,16 +33,13 @@
     </select>
 
     <update id="updateNoteTitleAndContentById" parameterType="com.csye6225.spring2019.entity.Note">
-        update Note set content=#{content},title =#{title}
+        update Note set content=#{content},title =#{title},update_time=#{updateTime}
         where id=#{id}
     </update>
 
     <insert id="insertNewNote" parameterType="com.csye6225.spring2019.entity.Note">
-        <selectKey keyColumn="id" keyProperty="id" resultType="int">
-            select last_insert_id()
-        </selectKey>
-        insert into note ( <include refid="sql"/> ) values
-        (#{userId},#{title},#{content},#{createTime},#{updateTime})
+        insert into note (id, <include refid="sql"/> ) values
+        (#{id},#{userId},#{title},#{content},#{createTime},#{updateTime})
     </insert>
 
 
