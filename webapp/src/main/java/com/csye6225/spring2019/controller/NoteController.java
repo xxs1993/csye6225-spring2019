@@ -56,6 +56,8 @@ public class NoteController {
             account = registerService.findByEmail(account.getEmailAddress());
             int id = account.getId();
             res.setData(noteService.findAll(id));
+            res.setStatusCode(200);
+            res.setMessage("OK");
         }
         return res;
     }
@@ -84,6 +86,8 @@ public class NoteController {
             httpServletResponse.setStatus(SC_CREATED);
 
             res.setData(note);
+            res.setStatusCode(201);
+            res.setMessage("created");
         }
         return res;
     }
