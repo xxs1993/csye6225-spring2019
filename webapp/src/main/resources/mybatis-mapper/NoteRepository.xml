@@ -43,7 +43,7 @@
     </insert>
 
 
-    <delete id="deleteNoteById" parameterType="int">
+    <delete id="deleteNoteById" parameterType="string">
         delete from note where id=#{id}
     </delete>
 </mapper>

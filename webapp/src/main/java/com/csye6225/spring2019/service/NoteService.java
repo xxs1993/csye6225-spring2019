@@ -13,5 +13,5 @@ public interface NoteService {
     List<Note> findAll(int userId,String title);
     Note getNoteByNoteId (String id);
     boolean deleteNoteByNoteId (String id);
-    boolean updateNoteByNoteId ( String id);
+    boolean updateNote (Note note);
 }
