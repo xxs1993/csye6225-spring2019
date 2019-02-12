@@ -88,7 +88,7 @@ public class NoteController {
     }
 
     @GetMapping("/note/{id}")
-    public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable int noteId) throws IOException{
+    public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId) throws IOException{
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -99,13 +99,18 @@ public class NoteController {
         else{
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
-            res.setData(noteService.getNoteByNoteId(user, noteId));
+            Note note = noteService.getNoteByNoteId(noteId);
+            if((note.getUserId() != user.getId())){
+                return null;
+            }else{
+                res.setData(noteService.getNoteByNoteId(noteId));
+            }
         }
         return res;
     }
 
     @PutMapping("/note/{id}")
-    public Result<Note> putCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable int noteId, @RequestBody Note note) throws IOException{
+    public Result<Note> putCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId, @RequestBody Note note) throws IOException{
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -121,14 +126,21 @@ public class NoteController {
             userNote.setContent(content);
             userNote.setTitle(title);
             userNote.setUserId(userId);
-            noteService.updateNoteByNoteId(account,noteId);
-            res.setData(userNote);
+
+            String email = account.getEmailAddress();
+            Account user = registerService.findByEmail(email);
+            if((note.getUserId() != user.getId())){
+                return null;
+            }else{
+                noteService.updateNoteByNoteId(noteId);
+                res.setData(userNote);
+            }
         }
         return res;
     }
 
     @DeleteMapping("/note/{id}")
-    public Result<String> deleteCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable int noteId) throws IOException {
+    public Result<String> deleteCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId) throws IOException {
         Result<String> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -139,9 +151,14 @@ public class NoteController {
         else{
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
-            noteService.deleteNoteByNoteId(user,noteId);
-            res.setStatusCode(200);
-            res.setMessage("register successful");
+            Note note = noteService.getNoteByNoteId(noteId);
+            if((note.getUserId() != user.getId())){
+                return null;
+            }else{
+                noteService.deleteNoteByNoteId(noteId);
+                res.setStatusCode(200);
+                res.setMessage("successfully deleted");
+            }
         }
         return res;
     }
