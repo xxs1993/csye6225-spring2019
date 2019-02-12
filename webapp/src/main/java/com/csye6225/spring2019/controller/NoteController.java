@@ -42,7 +42,7 @@ public class NoteController {
     @Autowired
     RegisterService registerService;
 
-
+/*
     @GetMapping("/note")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
         Result<List<Note>> res = new Result<>();
@@ -55,7 +55,7 @@ public class NoteController {
         else{
             account = registerService.findByEmail(account.getEmailAddress());
             int id = account.getId();
-            res.setData(noteService.findAll(account,id));
+            res.setData(noteService.findAll(id));
         }
         return res;
     }
@@ -86,6 +86,8 @@ public class NoteController {
         }
         return res;
     }
+
+ */
 
     @GetMapping("/note/{id}")
     public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable String noteId) throws IOException{
