@@ -23,17 +23,17 @@
     </select>
 
     <select id="listNoteByUserIdAndTitle" resultMap="result" parameterType="map">
-        select ID,<include refid="sql"/> from Note
+        select ID,<include refid="sql"/> from note
         <where>
             user_id =#{userId}
-            <if test="title==null or title==''">
+            <if test="title!=null and title!=''">
                 and title=#{title}
             </if>
         </where>
     </select>
 
     <update id="updateNoteTitleAndContentById" parameterType="com.csye6225.spring2019.entity.Note">
-        update Note set content=#{content},title =#{title},update_time=#{updateTime}
+        update note set content=#{content},title =#{title},update_time=#{updateTime}
         where id=#{id}
     </update>
 
