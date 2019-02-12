@@ -70,10 +70,10 @@ public class NoteServiceImpl implements NoteService{
     }
 
     @Override
-    public boolean updateNoteByNoteId(String id) {
-        if(Strings.isNullOrEmpty(id))
+    public boolean updateNote(Note note) {
+        if(Strings.isNullOrEmpty(note.getId()))
             return false;
-        Note note=noteRepository.getNoteByNoteId(id);
+        //Note note=noteRepository.getNoteByNoteId(id);
         note.setUpdateTime(new Timestamp(System.currentTimeMillis()));
         int re = noteRepository.updateNoteTitleAndContentById(note);
         return re>0;

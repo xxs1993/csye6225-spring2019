@@ -106,10 +106,19 @@ public class NoteController {
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
-            if((note.getUserId() != user.getId())){
-                httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
-            }else{
-                res.setData(noteService.getNoteByNoteId(noteId));
+            if(note == null){
+                res.setStatusCode(404);
+                res.setMessage("Not Fount");
+            }
+            else{
+                if((note.getUserId() != user.getId())){
+                    httpServletResponse.setStatus(SC_UNAUTHORIZED);
+                    httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+                }else{
+                    res.setData(noteService.getNoteByNoteId(noteId));
+                    res.setStatusCode(200);
+                    res.setMessage("OK");
+                }
             }
         }
         return res;
@@ -125,21 +134,28 @@ public class NoteController {
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
         }
         else{
-            Note userNote = new Note();
             String content = note.getContent();
             String title = note.getTitle();
-            int userId = note.getUserId();
-            userNote.setContent(content);
-            userNote.setTitle(title);
-            userNote.setUserId(userId);
+            Note userNote = noteService.getNoteByNoteId(noteId);
+            if(userNote == null){
+                res.setStatusCode(404);
+                res.setMessage("Not Fount");
+            }
+            else {
+                userNote.setContent(content);
+                userNote.setTitle(title);
 
-            String email = account.getEmailAddress();
-            Account user = registerService.findByEmail(email);
-            if((note.getUserId() != user.getId())){
-                httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
-            }else{
-                noteService.updateNoteByNoteId(noteId);
-                res.setData(userNote);
+                String email = account.getEmailAddress();
+                Account user = registerService.findByEmail(email);
+                if ((userNote.getUserId() != user.getId())) {
+                    httpServletResponse.setStatus(SC_UNAUTHORIZED);
+                    httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
+                } else {
+                    noteService.updateNote(userNote);
+                    res.setData(userNote);
+                    res.setStatusCode(200);
+                    res.setMessage("OK");
+                }
             }
         }
         return res;
@@ -158,12 +174,18 @@ public class NoteController {
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
-            if((note.getUserId() != user.getId())){
-                httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
-            }else{
-                noteService.deleteNoteByNoteId(noteId);
-                res.setStatusCode(200);
-                res.setMessage("successfully deleted");
+            if(note == null){
+                res.setStatusCode(404);
+                res.setMessage("Not Fount");
+            }
+            else {
+                if ((note.getUserId() != user.getId())) {
+                    httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
+                } else {
+                    noteService.deleteNoteByNoteId(noteId);
+                    res.setStatusCode(200);
+                    res.setMessage("successfully deleted");
+                }
             }
         }
         return res;
