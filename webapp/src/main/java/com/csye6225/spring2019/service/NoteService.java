@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface NoteService {
 
-    boolean addNewNote(Note note);
+    Note addNewNote(Note note);
     List<Note> findAll(int userId);
     List<Note> findAll(int userId,String title);
     Note getNoteByNoteId (String id);
