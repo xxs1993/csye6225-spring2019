@@ -101,7 +101,7 @@ public class NoteController {
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
             if((note.getUserId() != user.getId())){
-                return null;
+                httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
             }else{
                 res.setData(noteService.getNoteByNoteId(noteId));
             }
@@ -130,7 +130,7 @@ public class NoteController {
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
             if((note.getUserId() != user.getId())){
-                return null;
+                httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
             }else{
                 noteService.updateNoteByNoteId(noteId);
                 res.setData(userNote);
@@ -153,7 +153,7 @@ public class NoteController {
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
             if((note.getUserId() != user.getId())){
-                return null;
+                httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
             }else{
                 noteService.deleteNoteByNoteId(noteId);
                 res.setStatusCode(200);
