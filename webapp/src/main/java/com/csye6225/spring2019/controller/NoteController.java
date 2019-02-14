@@ -146,7 +146,7 @@ public class NoteController {
             String content = note.getContent();
             String title = note.getTitle();
             Note userNote = noteService.getNoteByNoteId(noteId);
-            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent()) || userNote == null){
+            if(userNote == null || Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent())){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
                 return res;
@@ -183,7 +183,7 @@ public class NoteController {
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
-            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent()) || note == null){
+            if(note == null){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
                 return res;
