@@ -8,5 +8,6 @@ public interface RegisterService {
 
     boolean checkAccount(Account account);
 
+    Account findByEmail(String email);
 
 }
