@@ -109,9 +109,13 @@ public class NoteController {
             if(note == null){
                 res.setStatusCode(404);
                 res.setMessage("Not Fount");
+                httpServletResponse.setStatus(SC_NOT_FOUND);
+                httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
             }
             else{
                 if((note.getUserId() != user.getId())){
+                    res.setStatusCode(401);
+                    res.setMessage("Unauthorized");
                     httpServletResponse.setStatus(SC_UNAUTHORIZED);
                     httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
                 }else{
@@ -137,14 +141,23 @@ public class NoteController {
             String content = note.getContent();
             String title = note.getTitle();
             Note userNote = noteService.getNoteByNoteId(noteId);
+            if(Strings.isNullOrEmpty(note.getContent())){
+                httpServletResponse.setStatus(SC_NO_CONTENT);
+                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
+            }
+            if(Strings.isNullOrEmpty(note.getTitle())){
+                httpServletResponse.setStatus(SC_BAD_REQUEST);
+                httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
+            }
             if(userNote == null){
                 res.setStatusCode(404);
                 res.setMessage("Not Fount");
+                httpServletResponse.setStatus(SC_NOT_FOUND);
+                httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
             }
             else {
                 userNote.setContent(content);
                 userNote.setTitle(title);
-
                 String email = account.getEmailAddress();
                 Account user = registerService.findByEmail(email);
                 if ((userNote.getUserId() != user.getId())) {
@@ -174,9 +187,21 @@ public class NoteController {
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
+            String content = note.getContent();
+            String title = note.getTitle();
+            if(Strings.isNullOrEmpty(note.getContent())){
+                httpServletResponse.setStatus(SC_NO_CONTENT);
+                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
+            }
+            if(Strings.isNullOrEmpty(note.getTitle())){
+                httpServletResponse.setStatus(SC_BAD_REQUEST);
+                httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
+            }
             if(note == null){
                 res.setStatusCode(404);
                 res.setMessage("Not Fount");
+                httpServletResponse.setStatus(SC_NOT_FOUND);
+                httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
             }
             else {
                 if ((note.getUserId() != user.getId())) {
