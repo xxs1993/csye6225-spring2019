@@ -80,11 +80,12 @@ public class NoteController {
             account = registerService.findByEmail(account.getEmailAddress());
             note.setUserId(account.getId());
             note = noteService.addNewNote(note);
-            if(note == null){
+            /*if(note == null){
                 httpServletResponse.sendError(SC_INTERNAL_SERVER_ERROR,"Unexpected error");
             }
+            httpServletResponse.setStatus(SC_CREATED);*/
             httpServletResponse.setStatus(SC_CREATED);
-
+            //httpServletResponse.sendError(SC_CREATED,"Created");
             res.setData(note);
             res.setStatusCode(201);
             res.setMessage("created");
