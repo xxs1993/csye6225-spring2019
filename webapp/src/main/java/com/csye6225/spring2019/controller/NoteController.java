@@ -70,11 +70,13 @@ public class NoteController {
         if(account == null || !registerService.checkAccount(account)){
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+            return res;
         }
         else{
             if(Strings.isNullOrEmpty(note.getContent()) || Strings.isNullOrEmpty(note.getTitle())){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
+                return res;
             }
            // httpServletResponse.se(SC_CREATED,"created");
             account = registerService.findByEmail(account.getEmailAddress());
@@ -82,9 +84,11 @@ public class NoteController {
             note = noteService.addNewNote(note);
             if(note == null){
                 httpServletResponse.sendError(SC_INTERNAL_SERVER_ERROR,"Unexpected error");
+                return res;
             }
+//            httpServletResponse.setStatus(SC_CREATED);*/
             httpServletResponse.setStatus(SC_CREATED);
-
+            //httpServletResponse.sendError(SC_CREATED,"Created");
             res.setData(note);
             res.setStatusCode(201);
             res.setMessage("created");
