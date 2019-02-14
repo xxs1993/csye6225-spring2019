@@ -122,6 +122,7 @@ public class NoteController {
                     res.setMessage("Unauthorized");
                     httpServletResponse.setStatus(SC_UNAUTHORIZED);
                     httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+                    return res;
                 }else{
                     res.setData(noteService.getNoteByNoteId(noteId));
                     res.setStatusCode(200);
@@ -145,13 +146,19 @@ public class NoteController {
             String content = note.getContent();
             String title = note.getTitle();
             Note userNote = noteService.getNoteByNoteId(noteId);
-            if(Strings.isNullOrEmpty(note.getContent())){
-                httpServletResponse.setStatus(SC_NO_CONTENT);
-                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
-            }
             if(Strings.isNullOrEmpty(note.getTitle())){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
+                res.setStatusCode(400);
+                res.setMessage("Bad Request");
+                return res;
+            }
+            if(Strings.isNullOrEmpty(note.getContent())){
+                httpServletResponse.setStatus(SC_NO_CONTENT);
+                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
+                res.setStatusCode(204);
+                res.setMessage("No Content");
+                return res;
             }
             if(userNote == null){
                 res.setStatusCode(404);
@@ -193,13 +200,19 @@ public class NoteController {
             Note note = noteService.getNoteByNoteId(noteId);
             String content = note.getContent();
             String title = note.getTitle();
-            if(Strings.isNullOrEmpty(note.getContent())){
-                httpServletResponse.setStatus(SC_NO_CONTENT);
-                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
-            }
             if(Strings.isNullOrEmpty(note.getTitle())){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
+                res.setStatusCode(400);
+                res.setMessage("Bad Request");
+                return res;
+            }
+            if(Strings.isNullOrEmpty(note.getContent())){
+                httpServletResponse.setStatus(SC_NO_CONTENT);
+                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
+                res.setStatusCode(204);
+                res.setMessage("No Content");
+                return res;
             }
             if(note == null){
                 res.setStatusCode(404);
