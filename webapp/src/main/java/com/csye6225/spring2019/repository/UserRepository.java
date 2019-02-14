@@ -1,7 +1,6 @@
 package com.csye6225.spring2019.repository;
 
 import com.csye6225.spring2019.entity.Account;
-import com.csye6225.spring2019.entity.Note;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -28,5 +27,4 @@ public interface UserRepository {
     int insertAccount(Account account);
 
     List<Account> findAll();
-
 }

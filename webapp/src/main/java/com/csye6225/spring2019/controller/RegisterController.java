@@ -41,7 +41,7 @@ public class RegisterController {
             return result;
         }
         if(registerService.checkAccount(account)){
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-DD HH:mm:ss");
             LocalDateTime now  = LocalDateTime.now();
             result.setMessage(dateTimeFormatter.format(now));
             result.setStatusCode(200);

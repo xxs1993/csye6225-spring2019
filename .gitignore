@@ -10,8 +10,6 @@ __pycache__/
 *.ipr
 .idea/
 
-application.properties
-
 # C extensions
 *.so
 
