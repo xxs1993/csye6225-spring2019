@@ -146,25 +146,15 @@ public class NoteController {
             String content = note.getContent();
             String title = note.getTitle();
             Note userNote = noteService.getNoteByNoteId(noteId);
-            if(Strings.isNullOrEmpty(note.getTitle())){
+            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent())){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
-                res.setStatusCode(400);
-                res.setMessage("Bad Request");
-                return res;
-            }
-            if(Strings.isNullOrEmpty(note.getContent())){
-                httpServletResponse.setStatus(SC_NO_CONTENT);
-                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
-                res.setStatusCode(204);
-                res.setMessage("No Content");
                 return res;
             }
             if(userNote == null){
-                res.setStatusCode(404);
-                res.setMessage("Not Fount");
                 httpServletResponse.setStatus(SC_NOT_FOUND);
                 httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
+                return res;
             }
             else {
                 userNote.setContent(content);
@@ -175,9 +165,9 @@ public class NoteController {
                     httpServletResponse.setStatus(SC_UNAUTHORIZED);
                     httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
                 } else {
+                    httpServletResponse.setStatus(SC_NO_CONTENT);
                     noteService.updateNote(userNote);
                     res.setData(userNote);
-                    res.setStatusCode(200);
                     res.setMessage("OK");
                 }
             }
@@ -200,23 +190,12 @@ public class NoteController {
             Note note = noteService.getNoteByNoteId(noteId);
             String content = note.getContent();
             String title = note.getTitle();
-            if(Strings.isNullOrEmpty(note.getTitle())){
+            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent())){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
-                res.setStatusCode(400);
-                res.setMessage("Bad Request");
-                return res;
-            }
-            if(Strings.isNullOrEmpty(note.getContent())){
-                httpServletResponse.setStatus(SC_NO_CONTENT);
-                httpServletResponse.sendError(SC_NO_CONTENT,"No Content");
-                res.setStatusCode(204);
-                res.setMessage("No Content");
                 return res;
             }
             if(note == null){
-                res.setStatusCode(404);
-                res.setMessage("Not Fount");
                 httpServletResponse.setStatus(SC_NOT_FOUND);
                 httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
             }
