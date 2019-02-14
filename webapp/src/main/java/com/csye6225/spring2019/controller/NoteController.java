@@ -114,7 +114,7 @@ public class NoteController {
                 res.setStatusCode(404);
                 res.setMessage("Not Fount");
                 httpServletResponse.setStatus(SC_NOT_FOUND);
-                httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
+                httpServletResponse.sendError(SC_NOT_FOUND,"Not Found");
             }
             else{
                 if((note.getUserId() != user.getId())){
@@ -146,14 +146,9 @@ public class NoteController {
             String content = note.getContent();
             String title = note.getTitle();
             Note userNote = noteService.getNoteByNoteId(noteId);
-            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent())){
+            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent()) || userNote == null){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
-                return res;
-            }
-            if(userNote == null){
-                httpServletResponse.setStatus(SC_NOT_FOUND);
-                httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
                 return res;
             }
             else {
@@ -188,23 +183,17 @@ public class NoteController {
             String email = account.getEmailAddress();
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
-            String content = note.getContent();
-            String title = note.getTitle();
-            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent())){
+            if(Strings.isNullOrEmpty(note.getTitle()) || Strings.isNullOrEmpty(note.getContent()) || note == null){
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST,"Bad Request");
                 return res;
-            }
-            if(note == null){
-                httpServletResponse.setStatus(SC_NOT_FOUND);
-                httpServletResponse.sendError(SC_NOT_FOUND,"Unauthorized");
             }
             else {
                 if ((note.getUserId() != user.getId())) {
                     httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
                 } else {
                     noteService.deleteNoteByNoteId(noteId);
-                    res.setStatusCode(200);
+                    httpServletResponse.setStatus(SC_NO_CONTENT);
                     res.setMessage("successfully deleted");
                 }
             }
