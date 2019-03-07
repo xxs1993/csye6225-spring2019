@@ -51,6 +51,7 @@ public class NoteController {
         if(account == null || !registerService.checkAccount(account)){
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+            return res;
         }
         else{
             account = registerService.findByEmail(account.getEmailAddress());
@@ -87,6 +88,9 @@ public class NoteController {
                 return res;
             }
 //            httpServletResponse.setStatus(SC_CREATED);*/
+            if(note.getAttachments() == null){
+                note.setAttachments(new ArrayList<>());
+            }
             httpServletResponse.setStatus(SC_CREATED);
             //httpServletResponse.sendError(SC_CREATED,"Created");
             res.setData(note);
@@ -105,6 +109,7 @@ public class NoteController {
         if(account == null || !registerService.checkAccount(account)){
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+            return res;
         }
         else{
             String email = account.getEmailAddress();
@@ -115,6 +120,7 @@ public class NoteController {
                 res.setMessage("Not Fount");
                 httpServletResponse.setStatus(SC_NOT_FOUND);
                 httpServletResponse.sendError(SC_NOT_FOUND,"Not Found");
+                return res;
             }
             else{
                 if((note.getUserId() != user.getId())){
@@ -141,6 +147,7 @@ public class NoteController {
         if(account == null || !registerService.checkAccount(account)){
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+            return res;
         }
         else{
             String content = note.getContent();
@@ -159,6 +166,7 @@ public class NoteController {
                 if ((userNote.getUserId() != user.getId())) {
                     httpServletResponse.setStatus(SC_UNAUTHORIZED);
                     httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
+                    return res;
                 } else {
                     httpServletResponse.setStatus(SC_NO_CONTENT);
                     noteService.updateNote(userNote);
@@ -178,6 +186,7 @@ public class NoteController {
         if(account == null || !registerService.checkAccount(account)){
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED,"Unauthorized");
+            return res;
         }
         else{
             String email = account.getEmailAddress();
