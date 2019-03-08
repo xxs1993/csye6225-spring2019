@@ -1,8 +1,10 @@
 package com.csye6225.spring2019.repository;
 
 
+import com.amazonaws.services.s3.model.Bucket;
 import com.csye6225.spring2019.entity.Account;
 import com.csye6225.spring2019.entity.Note;
+import com.csye6225.spring2019.util.S3Util;
 import com.google.common.base.Strings;
 import org.junit.Assert;
 import org.junit.FixMethodOrder;
@@ -36,6 +38,7 @@ public class NoteRepositoryTest {
         }
         userId = accounts.get(0).getId();
         Note note = new Note();
+//        note.setId();
         note.setUserId(userId);
         note.setTitle("sdd");
         note.setContent("dsss");
@@ -46,17 +49,16 @@ public class NoteRepositoryTest {
 
     @Test
     public void testListNoteByUserIdAndTitle(){
-        testInsertNewNote();
-        List<Note> notes = noteRepository.listNoteByUserIdAndTitle(userId,"d");
+//        testInsertNewNote();
+        List<Note> notes = noteRepository.listNoteByUserIdAndTitle(3,"");
         Assert.assertTrue(notes!=null && !notes
         .isEmpty());
     }
 
     @Test
-    public void test() {
-        List<Note> notes = noteRepository.listNoteByUserIdAndTitle(3,null);
-
-        System.out.println("###########"+Arrays.toString(notes.toArray()));
+    public void test(){
+        Bucket b = S3Util.getBucket("new-bucke");
+        System.out.println(b.getName());
     }
     
 }
