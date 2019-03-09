@@ -2,8 +2,8 @@
   "ec2TagSetList": [
     [
       {
-        "Key": "1",
-        "Value": "2",
+        "Key": "csye6225_key",
+        "Value": "csye6225_value",
         "Type": "KEY_AND_VALUE"
       }
     ]
