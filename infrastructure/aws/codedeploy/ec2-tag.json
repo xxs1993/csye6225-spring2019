@@ -1,0 +1,11 @@
+{
+  "ec2TagSetList": [
+    [
+      {
+        "Key": "csye6225_key",
+        "Value": "csye6225_value",
+        "Type": "KEY_AND_VALUE"
+      }
+    ]
+  ]
+}
