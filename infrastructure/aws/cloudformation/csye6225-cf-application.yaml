@@ -83,22 +83,22 @@ Resources:
 #         WriteCapacityUnits: "5"
 #       TableName: "csye6225"
       
-# # Setup DBSecurity Group
-#   rdsDBSecurityGroup:
-#     Type: AWS::EC2::SecurityGroup
-#     Properties:
-#       GroupDescription: Security Group for Web Servers
-#       VpcId: 
-#         Fn::ImportValue:
-#           !Sub "${refStackName}-vpcId"
-#       SecurityGroupIngress:
-#       - IpProtocol: tcp
-#         FromPort: "3306"
-#         ToPort: "3306"
-#         CidrIp: 0.0.0.0/0
-#       Tags:
-#       - Key: Name
-#         Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
+# Setup DBSecurity Group
+  rdsDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for Web Servers
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${refStackName}-vpcId"
+      SecurityGroupIngress:
+      - SourceSecurityGroupId: !Ref WebappSecurityGroup
+        IpProtocol: tcp
+        FromPort: "3306"
+        ToPort: "3306"
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
   
 # # Setup RDS Subnet Group
 #   rdsSubnetGroup: 
