@@ -176,3 +176,9 @@ Resources:
         - 
           !Ref "CodeDeployServiceRole"
       InstanceProfileName: "CodeDeployServiceRole"
+Outputs:
+  EC2InstanceProfile: 
+    Description: Codeploy Role for Ec2 Instance
+    Value: !Ref EC2InstanceProfile
+    Export:
+      Name: !Sub ${AWS::StackName}-Ec2InsanceProfile
