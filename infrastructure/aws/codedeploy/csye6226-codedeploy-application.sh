@@ -1,5 +1,4 @@
 set -e
-aws deploy create-application --application-name csye6225-webapp --compute-platform Server
 echo "Please input the key name :"
 read key
 echo "Please input the value :"
@@ -10,6 +9,9 @@ fi
 if [ -z "$value" ]; then
 	value="csye6225_value"
 fi
-re=$(cat ec2-tag.json|sed "s/csye6225_key/$key/g"|sed "s/csye6225_value/$value/g" )
+echo "Input stack name"
+read name
+aws iam get-role --role-name CodeDeployServiceRole
 role_arn=$(aws iam get-role --role-name CodeDeployServiceRole --query 'Role.Arn'|sed 's/\"//g')
-aws deploy create-deployment-group --application-name csye6225-webapp --deployment-group-name csye6225-webapp-deployment --service-role-arn $role_arn --deployment-style deploymentType=IN_PLACE,deploymentOption=WITHOUT_TRAFFIC_CONTROL --deployment-config-name CodeDeployDefault.AllAtOnce --auto-rollback-configuration enabled=true,events=DEPLOYMENT_FAILURE --ec2-tag-set "$re"
+
+aws cloudformation create-stack --stack-name $name --template-body file://codedeploy-application.yaml --parameters  "ParameterKey=key,ParameterValue=$key" "ParameterKey=value,ParameterValue=$value" "ParameterKey=roleArn,ParameterValue=$roleArn"
