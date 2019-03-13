@@ -9,7 +9,7 @@ jobs:
           name: Install packages
           command: sudo apt-get update && sudo apt-get install wget zip unzip python2.7 python-pip -y
 
-      -run:
+      - run:
           name: Install awscli
           command: sudo pip install awscli
 
