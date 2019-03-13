@@ -20,10 +20,10 @@ jobs:
           command: |
             echo "${KEY_ID},${KEY},${REGION}"
             aws configure
-            - ${KEY_ID}
-            - ${KEY}
-            - ${REGION}
-            - json
+            ${KEY_ID} /n
+            ${KEY} /n
+            ${REGION} /n
+            json /n
       - run:
           name: Build Artifact
           command: |
