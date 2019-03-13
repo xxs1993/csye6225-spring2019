@@ -55,3 +55,4 @@ jobs:
           name: Make CodeDeploy API call
           command: |
             echo "Hello CodeDeploy"
+            aws deploy create-deployment --application-name csye6225-webapp --deployment-group-name csye6225-webapp-deployment --s3-location bucket=code-deploy.csye6225-spring2019-jinyim.me,bundleType=war,key=webapp-0.0.1-SNAPSHOT.war
