@@ -17,7 +17,7 @@ jobs:
           command: sudo pip install awscli
       - run:
           name: Login awscli
-          command:
+          command: |
             echo "${KEY_ID},${KEY},${REGION}"
             aws configure
             ${KEY_ID}
