@@ -11,6 +11,8 @@ Parameters:
     Type: String
   rdsDBPass:
     Type: String
+  S3BucketName:
+    Type: String
 Resources: 
 # Setup Security Group for Ec2 Instance
   WebappSecurityGroup:
@@ -62,12 +64,12 @@ Resources:
       UserData:
         Fn::Base64:
           !Sub |
-              echo '#!/bin/sh' >> /usr/share/tomcat8/bin/setenv.sh \n 
-              sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=aws\\\"\" >> /etc/default/tomcat  \n
-              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /usr/share/tomcat8/bin/setenv.sh \n
-              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}\"' >> /usr/share/tomcat8/bin/setenv.sh \n
-              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}\"' >> /usr/share/tomcat8/bin/setenv.sh \n
-       
+              echo '#!/bin/sh' >> /usr/share/tomcat/bin/setenv.sh \n 
+              sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=dev\\\"\" >> /etc/default/tomcat  \n
+              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /usr/share/tomcat/bin/setenv.sh \n
+              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}\"' >> /usr/share/tomcat/bin/setenv.sh \n
+              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}\"' >> /usr/share/tomcat/bin/setenv.sh \n
+              echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /usr/share/tomcat/bin/setenv.sh \n
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Ec2Instance
