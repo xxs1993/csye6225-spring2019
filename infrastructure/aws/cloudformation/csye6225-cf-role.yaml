@@ -3,7 +3,12 @@ AWSTemplateFormatVersion: "2010-09-09"
 Parameters:
   bucket:
     Type: String
-
+  key: 
+    Type: String
+    Default: "csye6225"
+  value:
+    Type: String 
+    Default: "csye6225"
 Resources:
   CodeDeployEC2ServiceRole:      
     Type: AWS::IAM::Role
@@ -35,6 +40,8 @@ Resources:
               Action: 
                 - "sts:AssumeRole"
         RoleName: "CodeDeployServiceRole" 
+        ## Role
+
   Policy1:
     Type: AWS::IAM::ManagedPolicy
     Properties: 
@@ -176,3 +183,38 @@ Resources:
         - 
           !Ref "CodeDeployServiceRole"
       InstanceProfileName: "CodeDeployServiceRole"
+      ## CodeDeploy
+  Application:
+    Type: AWS::CodeDeploy::Application
+    Properties:
+        ApplicationName: "csye6225-webapp"     
+        ComputePlatform: Server
+  DeploymentGroup: 
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties: 
+      ApplicationName: "csye6225-webapp"
+      DeploymentGroupName: "csye6225-webapp-deployment"
+      DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
+      AutoRollbackConfiguration:
+        Enabled: True
+        Events: 
+         - "DEPLOYMENT_FAILURE"
+      DeploymentStyle:
+        DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
+        DeploymentType: "IN_PLACE"
+      Ec2TagFilters:
+          - 
+            Key: 
+              !Sub ${key}
+            Value: 
+              !Sub ${value}
+            Type: 
+              "KEY_AND_VALUE"
+      ServiceRoleArn: !GetAtt CodeDeployServiceRole.Arn
+
+Outputs:
+  EC2InstanceProfile: 
+    Description: Codeploy Role for Ec2 Instance
+    Value: !Ref EC2InstanceProfile
+    Export:
+      Name: !Sub ${AWS::StackName}-Ec2InstanceProfile
