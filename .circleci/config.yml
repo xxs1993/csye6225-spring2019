@@ -3,6 +3,9 @@ jobs:
   build:
     docker:
       - image: circleci/openjdk:8-jdk
+    branches:
+      only:
+       - Mybranch
     steps:
       - checkout
       - run:
@@ -52,6 +55,3 @@ jobs:
           name: Make CodeDeploy API call
           command: |
             echo "Hello CodeDeploy"
-  branches:
-    only:
-      - Mybranch
