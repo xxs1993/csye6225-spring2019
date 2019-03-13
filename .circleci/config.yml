@@ -15,15 +15,7 @@ jobs:
       - run:
           name: Install awscli
           command: sudo pip install awscli
-      - run:
-          name: Login awscli
-          command: |
-            echo "${KEY_ID},${KEY},${REGION}"
-            aws configure
-            ${KEY_ID} /n
-            ${KEY} /n
-            ${REGION} /n
-            json /n
+      
       - run:
           name: Build Artifact
           command: |
