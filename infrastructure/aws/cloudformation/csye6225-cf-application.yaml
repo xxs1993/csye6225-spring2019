@@ -5,7 +5,8 @@ Parameters:
     Type: String
   amiId:
     Type: String
-
+  RDSEndpoint:
+    Type: String
 Resources: 
 # Setup Security Group for Ec2 Instance
   WebappSecurityGroup:
@@ -32,58 +33,73 @@ Resources:
       - Key: Name
         Value: WebappSecurityGroup
 
-# Create Ec2 Instance
-  EC2Instance:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: t2.micro
-      SecurityGroupIds:
-        - !GetAtt WebappSecurityGroup.GroupId
-      DisableApiTermination: false
-      SubnetId:
-        Fn::ImportValue:
-          !Sub "${refStackName}-SubA"
-      BlockDeviceMappings: 
-        - DeviceName: /dev/sdm
-          Ebs: 
-            VolumeType: gp2
-            DeleteOnTermination: true
-            VolumeSize: 20
-      ImageId: !Sub ${amiId}
+# # Create Ec2 Instance
+#   EC2Instance:
+#     Type: AWS::EC2::Instance
+#     Properties:
+#       InstanceType: t2.micro
+#       KeyName: test1
+#       SecurityGroupIds:
+#         - !Ref WebappSecurityGroup
+#       DisableApiTermination: false
+#       SubnetId:
+#         Fn::ImportValue:
+#           !Sub "${refStackName}-SubA"
+#       BlockDeviceMappings: 
+#         - DeviceName: /dev/sdm
+#           Ebs: 
+#             VolumeType: gp2
+#             DeleteOnTermination: true
+#             VolumeSize: 20
+#       ImageId: !Sub ${amiId}
+#       UserData:
+#         Fn::Base64:
+#           !Sub |
+#               #!/bin/bash -ex
+#               yum install httpd -y
+#               echo "<html>Hello From Server${AWS::Region}</html>" > /var/www/html/index.html;
+#               cd /var/www/html
+#               chmod 755 index.html
+#               service httpd start
+#               chkconfig httpd ons
+#               mysql -h ${RDSEndpoint} -P 3306 -u csye6225master -p
+#       Tags:
+#       - Key: Name
+#         Value: !Sub ${AWS::StackName}-Ec2Instance
 
-# Create DynamoDB
-  dynamoDB: 
-    Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
-          AttributeName: "id"
-          AttributeType: "S"
-      KeySchema: 
-        - 
-          AttributeName: "id"
-          KeyType: "HASH"
-      ProvisionedThroughput: 
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TableName: "csye6225"
+# # Create DynamoDB
+#   dynamoDB: 
+#     Type: AWS::DynamoDB::Table
+#     Properties: 
+#       AttributeDefinitions: 
+#         - 
+#           AttributeName: "id"
+#           AttributeType: "S"
+#       KeySchema: 
+#         - 
+#           AttributeName: "id"
+#           KeyType: "HASH"
+#       ProvisionedThroughput: 
+#         ReadCapacityUnits: "5"
+#         WriteCapacityUnits: "5"
+#       TableName: "csye6225"
       
-# Setup DBSecurity Group
-  rdsDBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security Group for Web Servers
-      VpcId: 
-        Fn::ImportValue:
-          !Sub "${refStackName}-vpcId"
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: "3306"
-        ToPort: "3306"
-        CidrIp: 0.0.0.0/0
-      Tags:
-      - Key: Name
-        Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
+# # Setup DBSecurity Group
+#   rdsDBSecurityGroup:
+#     Type: AWS::EC2::SecurityGroup
+#     Properties:
+#       GroupDescription: Security Group for Web Servers
+#       VpcId: 
+#         Fn::ImportValue:
+#           !Sub "${refStackName}-vpcId"
+#       SecurityGroupIngress:
+#       - IpProtocol: tcp
+#         FromPort: "3306"
+#         ToPort: "3306"
+#         CidrIp: 0.0.0.0/0
+#       Tags:
+#       - Key: Name
+#         Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
   
 # Setup RDS Subnet Group
   rdsSubnetGroup: 
