@@ -181,4 +181,4 @@ Outputs:
     Description: Codeploy Role for Ec2 Instance
     Value: !Ref EC2InstanceProfile
     Export:
-      Name: !Sub ${AWS::StackName}-Ec2InsanceProfile
+      Name: !Sub ${AWS::StackName}-Ec2InstanceProfile
