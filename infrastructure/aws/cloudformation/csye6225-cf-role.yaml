@@ -113,8 +113,10 @@ Resources:
             - 
               Effect: "Allow"
               Action: 
-                - "s3:PutObject"
-              Resource: "*"
+                - "s3:*"
+              Resource: 
+                - !Sub ${bucket},
+                - !Sub "${bucket}/*"
         Users:
           - "circleci"
   Policy4:
@@ -184,37 +186,14 @@ Resources:
           !Ref "CodeDeployServiceRole"
       InstanceProfileName: "CodeDeployServiceRole"
       ## CodeDeploy
-  Application:
-    Type: AWS::CodeDeploy::Application
-    Properties:
-        ApplicationName: "csye6225-webapp"     
-        ComputePlatform: Server
-  DeploymentGroup: 
-    Type: AWS::CodeDeploy::DeploymentGroup
-    Properties: 
-      ApplicationName: "csye6225-webapp"
-      DeploymentGroupName: "csye6225-webapp-deployment"
-      DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
-      AutoRollbackConfiguration:
-        Enabled: True
-        Events: 
-         - "DEPLOYMENT_FAILURE"
-      DeploymentStyle:
-        DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
-        DeploymentType: "IN_PLACE"
-      Ec2TagFilters:
-          - 
-            Key: 
-              !Sub ${key}
-            Value: 
-              !Sub ${value}
-            Type: 
-              "KEY_AND_VALUE"
-      ServiceRoleArn: !GetAtt CodeDeployServiceRole.Arn
-
 Outputs:
   EC2InstanceProfile: 
     Description: Codeploy Role for Ec2 Instance
     Value: !Ref EC2InstanceProfile
     Export:
       Name: !Sub ${AWS::StackName}-Ec2InstanceProfile
+  CodeDeployEC2ServiceRole: 
+    Description: Codeploy Role 
+    Value: !GetAtt CodeDeployEC2ServiceRole.Arn
+    Export:
+      Name: !Sub ${AWS::StackName}-CodeDeployEC2ServiceRole-Arn
