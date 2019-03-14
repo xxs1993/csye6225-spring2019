@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: webapp/target/csye6225-0.0.1-SNAPSHOT.war
-    destination: /usr/tomcat/webapps
+    destination: /usr/share/tomcat/webapps
   - source: appspec.yml
     destination: /home/centos
   - source: applicationStop.sh
