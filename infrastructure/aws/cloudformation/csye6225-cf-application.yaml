@@ -15,7 +15,9 @@ Parameters:
     Type: String
   RDSEndPoint:
     Type: String
+
 Resources: 
+
   Application:
     Type: AWS::CodeDeploy::Application
     Properties:
@@ -46,6 +48,7 @@ Resources:
       ServiceRoleArn:
         Fn::ImportValue:
           !Sub ${roleStackName}-CodeDeployServiceRole-Arn
+  
 # Setup Security Group for Ec2 Instance
   WebappSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -117,10 +120,10 @@ Resources:
               drop table if exists attachment;
               CREATE TABLE attachment ( id varchar(36) NOT NULL, note_id varchar(36) NOT NULL, url varchar(255) NOT NULL, file_name varchar(255) NOT NULL, file_size bigint(32) default 0, file_type char(8) not null, create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP, update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
               exit;
-              
+
               sudo echo '#!/bin/sh' >> /usr/share/tomcat/bin/setenv.sh \n 
               sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=dev\\\"\" >> /etc/default/tomcat  \n
-              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /usr/share/tomcat/bin/setenv.sh \n
+              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${RDSEndPoint}:3306/csye6225\"' >> /usr/share/tomcat/bin/setenv.sh \n
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}\"' >> /usr/share/tomcat/bin/setenv.sh \n
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}\"' >> /usr/share/tomcat/bin/setenv.sh \n
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /usr/share/tomcat/bin/setenv.sh \n
