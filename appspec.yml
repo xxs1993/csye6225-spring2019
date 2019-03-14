@@ -2,11 +2,33 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./webapp/build/libs/ROOT.war
-    destination: /opt/tomcat/webapps
+  - source: webapp/target/csye6225-0.0.1-SNAPSHOT.war
+    destination: /usr/share/tomcat/webapps
+  - source: appspec.yml
+    destination: /home/centos
+  - source: applicationStop.sh
+    destination: /home/centos
+  - source: beforeInstall.sh
+    destination: /home/centos
+  - source: afterinstall.sh
+    destination: /home/centos
+  - source: applicationStart.sh
+    destination: /home/centos
 
 hooks:
+  ApplicationStop:
+   - location: applicationStop.sh
+     timeout: 180
+     runas: centos
+  BeforeInstall:
+   - location: beforeInstall.sh
+     timeout: 180
+     runas: centos
   AfterInstall:
-   - location: ./afterInstall.sh
+   - location: afterinstall.sh
+     timeout: 180
+     runas: centos
+  ApplicationStart:
+   - location: applicationStart.sh
      timeout: 180
      runas: centos
