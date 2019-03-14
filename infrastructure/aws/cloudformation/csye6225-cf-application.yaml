@@ -101,8 +101,8 @@ Resources:
           !Sub |
               #!/bin/sh
               sudo chmod 777 /etc/tomcat/tomcat.conf
-              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /etc/tomcat/tomcat.conf
               sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=dev\\\"\" >> /etc/tomcat/tomcat.conf
+              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /etc/tomcat/tomcat.conf
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}\"' >> /etc/tomcat/tomcat.conf
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}\"' >> /etc/tomcat/tomcat.conf
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /etc/tomcat/tomcat.conf
