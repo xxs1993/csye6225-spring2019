@@ -1,7 +1,7 @@
 #! /bin/bash
 set -e
 amiId=`aws ec2 describe-images --owners self --filters "Name=root-device-type,Values=ebs" | grep -o '"ImageId": *"[^"]*"' | grep -o '"[^"]*"$' | sed 's/\"//g' | head -n 1`
-RDS=`aws rds --region us-east-1 describe-db-instances --query "DBInstances[*].Endpoint.Address" --filters | sed 's/\"//g' | sed 's/\[//g' | sed 's/\]//g'`
+RDS=`aws rds --region us-east-1 describe-db-instances --query "DBInstances[*].Endpoint.Address" --filters | grep -o '"[^"]*"$' | sed 's/\"//g' | sed 's/\[//g' | sed 's/\]//g'`
 echo "Input application stack name"
 read name
 echo "Input reference stack name"
