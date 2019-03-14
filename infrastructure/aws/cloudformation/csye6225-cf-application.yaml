@@ -100,7 +100,6 @@ Resources:
         Fn::Base64:
           !Sub |
               #!/bin/sh
-              cd /
               sudo chmod 777 /etc/tomcat/tomcat.conf
               sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=dev\\\"\" >> /etc/tomcat/tomcat.conf
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${RDSEndPoint}:3306/csye6225\"' >> /etc/tomcat/tomcat.conf
