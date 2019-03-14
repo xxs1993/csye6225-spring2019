@@ -13,6 +13,8 @@ Parameters:
     Type: String
   S3BucketName:
     Type: String
+  RDSEndPoint:
+    Type: String
 Resources: 
   Application:
     Type: AWS::CodeDeploy::Application
@@ -94,6 +96,29 @@ Resources:
       UserData:
         Fn::Base64:
           !Sub |
+              #!/bin/bash -ex
+              sudo yum install mysql
+              mysql -h ${RDSEndPoint} -P 3306 -u csye6225master -pcsye6225password
+              use csye6225;
+              drop table if exists user;
+              CREATE TABLE user(
+                 id INT PRIMARY KEY AUTO_INCREMENT,
+                 email_address VARCHAR(255),
+                 pwd_string VARCHAR(255)
+              );
+              drop table if exists note;
+              CREATE TABLE csye6225.`note` ( 
+                 `id` varchar(36) NOT NULL ,  
+                 `user_id` int(11) DEFAULT '0',   
+                 `title` varchar(255) DEFAULT '',   
+                 `content` varchar(255) DEFAULT '',   
+                 `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  
+                 `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,   
+                 PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+              drop table if exists attachment;
+              CREATE TABLE attachment ( id varchar(36) NOT NULL, note_id varchar(36) NOT NULL, url varchar(255) NOT NULL, file_name varchar(255) NOT NULL, file_size bigint(32) default 0, file_type char(8) not null, create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP, update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
+              exit;
+
               sudo echo '#!/bin/sh' >> /usr/share/tomcat/bin/setenv.sh \n 
               sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=dev\\\"\" >> /etc/default/tomcat  \n
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /usr/share/tomcat/bin/setenv.sh \n
