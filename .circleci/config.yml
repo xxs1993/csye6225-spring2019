@@ -5,7 +5,7 @@ jobs:
       - image: circleci/openjdk:8-jdk
     branches:
       only:
-       - Mybranch
+       - Assignment5
     steps:
       - checkout
       - run:
