@@ -3,7 +3,7 @@ os: linux
 
 files:
   - source: ./webapp/target/csye6225-0.0.1-SNAPSHOT.war
-    destination: /opt/tomcat/webapps
+    destination: /usr/tomcat/webapps
   - source: ./appspec.yml
     destination: /home/centos
   - source: ./applicationStop.sh
@@ -17,18 +17,18 @@ files:
 
 hooks:
   ApplicationStop:
-   - location: ~/applicationStop.sh
+   - location: applicationStop.sh
      timeout: 180
      runas: centos
   BeforeInstall:
-   - location: ~/beforeInstall.sh
+   - location: beforeInstall.sh
      timeout: 180
      runas: centos
   AfterInstall:
-   - location: ~/afterInstall.sh
+   - location: afterInstall.sh
      timeout: 180
      runas: centos
   ApplicationStart:
-   - location: ~/applicationStart.sh
+   - location: applicationStart.sh
      timeout: 180
      runas: centos
