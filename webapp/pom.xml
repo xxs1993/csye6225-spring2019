@@ -15,7 +15,7 @@
 	<name>csye6225</name>
 	<description>csye6225 for spring2019</description>
 
-
+	<packaging>war</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>

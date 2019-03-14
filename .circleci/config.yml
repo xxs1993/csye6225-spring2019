@@ -5,7 +5,7 @@ jobs:
       - image: circleci/openjdk:8-jdk
     branches:
       only:
-       - Mybranch
+       - Assignment5
     steps:
       - checkout
       - run:
@@ -37,7 +37,8 @@ jobs:
             pwd
             mkdir -p codedeploy_artifact
             cp infrastructure/aws/codedeploy/*.sh .
-            zip -r csye6225-web-app-${CIRCLE_BUILD_NUM}.zip webapp/target/webapp-0.0.1-SNAPSHOT.war *.sh *.yml
+            zip -r csye6225-web-app-${CIRCLE_BUILD_NUM}.zip webapp/target/csye6225-0.0.1-SNAPSHOT.war *.sh *.yml
+            ls
             mv csye6225-web-app-${CIRCLE_BUILD_NUM}.zip codedeploy_artifact/
             cd codedeploy_artifact
             ls -al
@@ -55,3 +56,4 @@ jobs:
           name: Make CodeDeploy API call
           command: |
             echo "Hello CodeDeploy"
+            aws deploy create-deployment --application-name csye6225-webapp --deployment-group-name csye6225-webapp-deployment --s3-location bucket=${S3_ARN},bundleType=zip,key=csye6225-web-app-${CIRCLE_BUILD_NUM}.zip

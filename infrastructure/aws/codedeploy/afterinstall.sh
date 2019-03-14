@@ -1,12 +1,9 @@
 #!/bin/bash
 
-sudo systemctl stop tomcat.service
-
-sudo rm -rf /opt/tomcat/webapps/docs  /opt/tomcat/webapps/examples /opt/tomcat/webapps/host-manager  /opt/tomcat/webapps/manager /opt/tomcat/webapps/ROOT
-
-sudo chown tomcat:tomcat /opt/tomcat/webapps/ROOT.war
-
-# cleanup log files
-sudo rm -rf /opt/tomcat/logs/catalina*
-sudo rm -rf /opt/tomcat/logs/*.log
-sudo rm -rf /opt/tomcat/logs/*.txt
+# update the permission and ownership of WAR file in the tomcat webapps directory
+#sudo service tomcat8 stop
+cd /
+cd usr/share/tomcat/webapps
+sudo chown tomcat:tomcat csye6225-0.0.1-SNAPSHOT.war
+sudo chmod 777 csye6225-0.0.1-SNAPSHOT.war
+sudo systemctl restart tomcat
