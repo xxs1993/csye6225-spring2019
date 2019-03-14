@@ -14,6 +14,36 @@ Parameters:
   S3BucketName:
     Type: String
 Resources: 
+  Application:
+    Type: AWS::CodeDeploy::Application
+    Properties:
+      ApplicationName: "csye6225-webapp"     
+      ComputePlatform: Server
+
+  DeploymentGroup: 
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties: 
+      ApplicationName: !Ref Application
+      DeploymentGroupName: "csye6225-webapp-deployment"
+      DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
+      AutoRollbackConfiguration:
+        Enabled: True
+        Events: 
+         - "DEPLOYMENT_FAILURE"
+      DeploymentStyle:
+        DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
+        DeploymentType: "IN_PLACE"
+      Ec2TagFilters:
+          - 
+            Key: 
+              "Name"
+            Value: 
+              !Sub ${AWS::StackName}-Ec2Instance
+            Type: 
+              "KEY_AND_VALUE"
+      ServiceRoleArn:
+        Fn::ImportValue:
+          !Sub ${roleStackName}-CodeDeployServiceRole-Arn
 # Setup Security Group for Ec2 Instance
   WebappSecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -73,7 +103,7 @@ Resources:
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Ec2Instance
-
+ 
 # # Create DynamoDB
 #   dynamoDB: 
 #     Type: AWS::DynamoDB::Table
@@ -91,7 +121,7 @@ Resources:
 #         WriteCapacityUnits: "5"
 #       TableName: "csye6225"
       
-# Setup DBSecurity Group
+#Setup DBSecurity Group
   rdsDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -140,32 +170,5 @@ Resources:
       DBSubnetGroupName: !Ref rdsSubnetGroup
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
-  Application:
-    Type: AWS::CodeDeploy::Application
-    Properties:
-        ApplicationName: "csye6225-webapp"     
-        ComputePlatform: Server
-  DeploymentGroup: 
-    Type: AWS::CodeDeploy::DeploymentGroup
-    Properties: 
-      ApplicationName: "csye6225-webapp"
-      DeploymentGroupName: "csye6225-webapp-deployment"
-      DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
-      AutoRollbackConfiguration:
-        Enabled: True
-        Events: 
-         - "DEPLOYMENT_FAILURE"
-      DeploymentStyle:
-        DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
-        DeploymentType: "IN_PLACE"
-      Ec2TagFilters:
-          - 
-            Key: 
-              "Name"
-            Value: 
-              !Ref EC2Instance.Tags[0].Value
-            Type: 
-              "KEY_AND_VALUE"
-      ServiceRoleArn:
-       !ImportValue: 
-        !Sub ${AWS::StackName}-CodeDeployEC2ServiceRole-Arn
+##Application
+  
