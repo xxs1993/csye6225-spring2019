@@ -115,8 +115,8 @@ Resources:
               Action: 
                 - "s3:*"
               Resource: 
-                - !Sub ${bucket},
-                - !Sub "${bucket}/*"
+                - !Sub "arn:aws:s3:::${bucket}"
+                - !Sub "arn:aws:s3:::${bucket}/*"
         Users:
           - "circleci"
   Policy4:
@@ -194,6 +194,6 @@ Outputs:
       Name: !Sub ${AWS::StackName}-Ec2InstanceProfile
   CodeDeployEC2ServiceRole: 
     Description: Codeploy Role 
-    Value: !GetAtt CodeDeployEC2ServiceRole.Arn
+    Value: !GetAtt CodeDeployServiceRole.Arn
     Export:
-      Name: !Sub ${AWS::StackName}-CodeDeployEC2ServiceRole-Arn
+      Name: !Sub ${AWS::StackName}-CodeDeployServiceRole-Arn
