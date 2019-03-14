@@ -106,9 +106,9 @@ Resources:
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}\"' >> /etc/tomcat/tomcat.conf
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}\"' >> /etc/tomcat/tomcat.conf
               sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /etc/tomcat/tomcat.conf
-              
+              sudo systemctl restart tomcat
+
               #!/bin/bash -ex
-              sudo yum install mysql -y
               mysql -h ${rdsInstance.Endpoint.Address} -P 3306 -u csye6225master -pcsye6225password
               use csye6225;
               drop table if exists user;
@@ -201,5 +201,5 @@ Resources:
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
 ##Application
-##test4
+##test5
   
