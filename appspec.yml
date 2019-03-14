@@ -2,17 +2,17 @@ version: 0.0
 os: linux
 
 files:
-  - source: ./webapp/target/csye6225-0.0.1-SNAPSHOT.war
+  - source: webapp/target/csye6225-0.0.1-SNAPSHOT.war
     destination: /usr/tomcat/webapps
-  - source: ./appspec.yml
+  - source: appspec.yml
     destination: /home/centos
-  - source: ./applicationStop.sh
+  - source: applicationStop.sh
     destination: /home/centos
-  - source: ./beforeInstall.sh
+  - source: beforeInstall.sh
     destination: /home/centos
-  - source: ./afterInstall.sh
+  - source: afterInstall.sh
     destination: /home/centos
-  - source: ./applicationStart.sh
+  - source: applicationStart.sh
     destination: /home/centos
 
 hooks:
