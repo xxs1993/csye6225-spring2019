@@ -10,7 +10,7 @@ files:
     destination: /home/centos
   - source: beforeInstall.sh
     destination: /home/centos
-  - source: afterInstall.sh
+  - source: afterinstall.sh
     destination: /home/centos
   - source: applicationStart.sh
     destination: /home/centos
@@ -25,7 +25,7 @@ hooks:
      timeout: 180
      runas: centos
   AfterInstall:
-   - location: afterInstall.sh
+   - location: afterinstall.sh
      timeout: 180
      runas: centos
   ApplicationStart:
