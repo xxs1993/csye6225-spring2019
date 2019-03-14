@@ -4,6 +4,6 @@
 #sudo service tomcat8 stop
 cd /
 cd usr/share/tomcat/webapps
-# sudo chown tomcat:tomcat csye6225-0.0.1-SNAPSHOT.war
+sudo chown tomcat:tomcat csye6225-0.0.1-SNAPSHOT.war
 sudo chmod 777 csye6225-0.0.1-SNAPSHOT.war
-java -jar csye6225-0.0.1-SNAPSHOT.war
+sudo systemctl restart tomcat
