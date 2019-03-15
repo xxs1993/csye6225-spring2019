@@ -18,6 +18,7 @@ Resources:
       VpcId: !Ref csye6225VPC
       CidrBlock: 10.0.1.0/24
       AvailabilityZone: !Select [ 0, !GetAZs ]    # Get the first AZ in the list
+      MapPublicIpOnLaunch: True
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Public-A
@@ -28,6 +29,7 @@ Resources:
       VpcId: !Ref csye6225VPC
       CidrBlock: 10.0.2.0/24
       AvailabilityZone: !Select [ 1, !GetAZs ]    # Get the second AZ in the list
+      MapPublicIpOnLaunch: True
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Public-B
@@ -38,6 +40,7 @@ Resources:
       VpcId: !Ref csye6225VPC
       CidrBlock: 10.0.3.0/24
       AvailabilityZone: !Select [ 2, !GetAZs ]    # Get the third AZ in the list
+      MapPublicIpOnLaunch: True
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Public-C
