@@ -2,7 +2,7 @@ version: 0.0
 os: linux
 
 files:
-  - source: webapp/target/csye6225-0.0.1-SNAPSHOT.war
+  - source: webapp/target/ROOT.war
     destination: /usr/share/tomcat/webapps
   - source: appspec.yml
     destination: /home/centos
