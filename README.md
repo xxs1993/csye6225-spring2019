@@ -10,7 +10,7 @@
 |Yimu Jin| 001449259 | jin.yim@husky.neu.edu |
 
 ## Technology Stack
-Frame:Spring boot
+Frame:Spring boot  
 DBMS:MySQL(username : root; password:00000000; database : csye6225)
 Other Dependencies : Spring security, Mybatis,jjwt,lombok
 
