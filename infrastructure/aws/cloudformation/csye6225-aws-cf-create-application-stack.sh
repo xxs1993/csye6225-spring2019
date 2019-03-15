@@ -1,6 +1,6 @@
 #! /bin/bash
 set -e
-amiId=`aws ec2 describe-images --owners self --filters "Name=root-device-type,Values=ebs" | grep -o '"ImageId": *"[^"]*"' | grep -o '"[^"]*"$' | sed 's/\"//g' | head -n 1`
+amiId=`aws ec2 describe-images --owners self --filters 'Name=root-device-type,Values=ebs' --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text'`
 RDS=`aws rds --region us-east-1 describe-db-instances --query "DBInstances[*].Endpoint.Address" --filters | grep -o '"[^"]*"$' | sed 's/\"//g' | sed 's/\[//g' | sed 's/\]//g'`
 echo "Input application stack name"
 read name
