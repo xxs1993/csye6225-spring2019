@@ -100,35 +100,13 @@ Resources:
         Fn::Base64:
           !Sub |
               #!/bin/sh
-              sudo chmod 777 /etc/tomcat/tomcat.conf
-              sudo echo \"JAVA_OPTS=\\\"\\$JAVA_OPTS -Dspring.profiles.active=dev\\\"\" >> /etc/tomcat/tomcat.conf
-              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225\"' >> /etc/tomcat/tomcat.conf
-              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}\"' >> /etc/tomcat/tomcat.conf
-              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}\"' >> /etc/tomcat/tomcat.conf
-              sudo echo 'JAVA_OPTS=\"$JAVA_OPTS -Dbucket.name=${S3BucketName}\"' >> /etc/tomcat/tomcat.conf
-              sudo systemctl restart tomcat
-
-              #!/bin/bash -ex
-              mysql -h ${rdsInstance.Endpoint.Address} -P 3306 -u csye6225master -pcsye6225password
-              use csye6225;
-              drop table if exists user;
-              CREATE TABLE user(
-                 id INT PRIMARY KEY AUTO_INCREMENT,
-                 email_address VARCHAR(255),
-                 pwd_string VARCHAR(255)
-              );
-              drop table if exists note;
-              CREATE TABLE csye6225.`note` ( 
-                 `id` varchar(36) NOT NULL ,  
-                 `user_id` int(11) DEFAULT '0',   
-                 `title` varchar(255) DEFAULT '',   
-                 `content` varchar(255) DEFAULT '',   
-                 `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  
-                 `update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,   
-                 PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
-              drop table if exists attachment;
-              CREATE TABLE attachment ( id varchar(36) NOT NULL, note_id varchar(36) NOT NULL, url varchar(255) NOT NULL, file_name varchar(255) NOT NULL, file_size bigint(32) default 0, file_type char(8) not null, create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP, update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (id) ) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
-              exit;
+              sudo su
+              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.profiles.active=dev"' >> /etc/systemd/system/tomcat.service
+              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /etc/systemd/system/tomcat.service
+              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /etc/systemd/system/tomcat.service
+              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /etc/systemd/system/tomcat.service
+              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dbucket.name=${S3BucketName}"' >> /etc/systemd/system/tomcat.service
+              sudo systemctl daemon-reload
 
       Tags:
       - Key: Name
