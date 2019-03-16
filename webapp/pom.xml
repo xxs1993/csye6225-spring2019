@@ -107,13 +107,7 @@
 			<version>0.10.5</version>
 			<scope>runtime</scope>
 		</dependency>
-		<dependency>
-			<groupId>lombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>1.18.4</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}/lib/lombok.jar</systemPath>
-		</dependency>
+		
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
