@@ -5,3 +5,4 @@
 cd /
 cd opt/tomcat/latest/webapps
 sudo rm -rf *
+echo "success"
