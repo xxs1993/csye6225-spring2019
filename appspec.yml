@@ -8,7 +8,7 @@ files:
     destination: /home/centos
   - source: applicationStop.sh
     destination: /home/centos
-  - source: beforeinstall.sh
+  - source: beforeInstall.sh
     destination: /home/centos
   - source: afterinstall.sh
     destination: /home/centos
@@ -21,7 +21,7 @@ hooks:
      timeout: 180
      runas: centos
   BeforeInstall:
-   - location: beforeinstall.sh
+   - location: beforeInstall.sh
      timeout: 180
      runas: centos
   AfterInstall:
