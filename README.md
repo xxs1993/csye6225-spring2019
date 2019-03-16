@@ -80,3 +80,4 @@ Open Postman, choose Body section then select raw ->JSON, type data in this form
  Send Post Request in Postman wiht URL:localhost:8080/user/register.
  
 ## CI/CD
+ 

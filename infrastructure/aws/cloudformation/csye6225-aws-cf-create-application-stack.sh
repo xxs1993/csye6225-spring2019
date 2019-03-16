@@ -1,12 +1,12 @@
 #! /bin/bash
 set -e
-amiId=`aws ec2 describe-images --owners self --filters "Name=root-device-type,Values=ebs" | grep -o '"ImageId": *"[^"]*"' | grep -o '"[^"]*"$' | sed 's/\"//g' | head -n 1`
-RDS=`aws rds --region us-east-1 describe-db-instances --query "DBInstances[*].Endpoint.Address" --filters | grep -o '"[^"]*"$' | sed 's/\"//g' | sed 's/\[//g' | sed 's/\]//g'`
+amiId=`aws ec2 describe-images --owners self --filters 'Name=root-device-type,Values=ebs' --query 'sort_by(Images, &CreationDate)[-1].[ImageId]' --output 'text'`
+RDS=`aws rds --region us-east-1 describe-db-instances --query "DBInstances[*].Endpoint.Address" --output 'text'`
 echo "Input application stack name"
 read name
-echo "Input reference stack name"
+echo "Input network stack name"
 read refStackName
-echo "Input Role stack name"
+echo "Input role stack name"
 read roleStackName
 echo "Input your husky-id on S3 bucket for WebApp"
 read S3BucketName
