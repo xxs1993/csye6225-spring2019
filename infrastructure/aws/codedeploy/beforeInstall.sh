@@ -4,7 +4,7 @@
 # this directory will be different for different tomcat versions.
 
 sudo su
-sudo cd /
-sudo cd opt/tomcat/latest/webapps
-sudo rm -rf *
+cd /
+cd opt/tomcat/latest/webapps
+rm -rf *
 echo "success"
