@@ -21,7 +21,7 @@ hooks:
      timeout: 180
      runas: centos
   BeforeInstall:
-   - location: beforeInstall.sh
+   - location: beforeinstall.sh
      timeout: 180
      runas: centos
   AfterInstall:
