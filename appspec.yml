@@ -3,7 +3,9 @@ os: linux
 
 files:
   - source: webapp/target/ROOT.war
-    destination: /usr/share/tomcat/webapps
+
+    destination: /opt/tomcat/latest/webapps
+
   - source: appspec.yml
     destination: /home/centos
   - source: applicationStop.sh
