@@ -2,6 +2,7 @@ package com.csye6225.spring2019.util;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.EnvironmentVariableCredentialsProvider;
+import com.amazonaws.auth.InstanceProfileCredentialsProvider;
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
 import com.amazonaws.services.s3.AmazonS3;
@@ -26,7 +27,7 @@ public class S3Util {
     private static AmazonS3 s3;
 
     static {
-        AmazonS3ClientBuilder amazonS3ClientBuilder = AmazonS3ClientBuilder.standard().withCredentials(new ProfileCredentialsProvider());
+        AmazonS3ClientBuilder amazonS3ClientBuilder = AmazonS3ClientBuilder.standard().withCredentials(new InstanceProfileCredentialsProvider(false));
         amazonS3ClientBuilder.setForceGlobalBucketAccessEnabled(true);
          s3 = amazonS3ClientBuilder.build();
 
