@@ -5,6 +5,7 @@ Parameters:
     Type: String
   amiId:
     Type: String
+
   roleStackName:
     Type: String
   rdsDBUser:
@@ -79,7 +80,9 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
+
       KeyName: csye6225
+
       SecurityGroupIds:
         - !Ref WebappSecurityGroup
       DisableApiTermination: false
@@ -93,6 +96,7 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 20
       ImageId: !Sub ${amiId}
+
       IamInstanceProfile: 
         Fn::ImportValue:
           !Sub "${roleStackName}-Ec2InstanceProfile"
@@ -112,6 +116,7 @@ Resources:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Ec2Instance
  
+
 # # Create DynamoDB
 #   dynamoDB: 
 #     Type: AWS::DynamoDB::Table
@@ -129,6 +134,7 @@ Resources:
 #         WriteCapacityUnits: "5"
 #       TableName: "csye6225"
       
+
 # Setup DBSecurity Group
   rdsDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
