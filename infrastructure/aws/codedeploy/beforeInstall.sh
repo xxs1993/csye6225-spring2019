@@ -4,5 +4,5 @@
 # this directory will be different for different tomcat versions.
 sudo su
 cd /
-cd /opt/tomcat/latest/webapps
+cd opt/tomcat/latest/webapps
 sudo rm -rf *
