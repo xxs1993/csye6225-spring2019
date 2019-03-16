@@ -109,6 +109,8 @@ Resources:
           !Sub |
               #!/bin/sh
               sudo su
+              cd /opt/tomcat/latest/webapps
+              rm -rf *
               echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh 
               chmod +x /opt/tomcat/latest/bin/setenv.sh 
               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
@@ -117,6 +119,7 @@ Resources:
               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
               echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
               systemctl daemon-reload
+
 
       Tags:
       - Key: Name
