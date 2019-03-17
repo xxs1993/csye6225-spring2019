@@ -109,12 +109,17 @@ Resources:
           !Sub |
               #!/bin/sh
               sudo su
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.profiles.active=dev"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dbucket.name=${S3BucketName}"' >> /etc/systemd/system/tomcat.service
-              sudo systemctl daemon-reload
+              cd /opt/tomcat/latest/webapps
+              rm -rf *
+              echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh 
+              chmod +x /opt/tomcat/latest/bin/setenv.sh 
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
+              systemctl daemon-reload
+
 
       Tags:
       - Key: Name
