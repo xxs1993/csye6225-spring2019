@@ -1,0 +1,34 @@
+version: 0.0
+os: linux
+
+files:
+  - source: webapp/target/ROOT.war
+    destination: /opt/tomcat/latest/webapps
+  - source: appspec.yml
+    destination: /home/centos
+  - source: applicationStop.sh
+    destination: /home/centos
+  - source: beforeInstall.sh
+    destination: /home/centos
+  - source: afterinstall.sh
+    destination: /home/centos
+  - source: applicationStart.sh
+    destination: /home/centos
+
+hooks:
+  ApplicationStop:
+   - location: applicationStop.sh
+     timeout: 180
+     runas: centos
+  BeforeInstall:
+   - location: beforeInstall.sh
+     timeout: 180
+     runas: centos
+  AfterInstall:
+   - location: afterinstall.sh
+     timeout: 180
+     runas: centos
+  ApplicationStart:
+   - location: applicationStart.sh
+     timeout: 180
+     runas: centos

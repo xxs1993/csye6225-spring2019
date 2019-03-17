@@ -10,7 +10,7 @@
 |Yimu Jin| 001449259 | jin.yim@husky.neu.edu |
 
 ## Technology Stack
-Frame:Spring boot
+Frame:Spring boot  
 DBMS:MySQL(username : root; password:00000000; database : csye6225)
 Other Dependencies : Spring security, Mybatis,jjwt,lombok
 
@@ -44,6 +44,15 @@ Other Dependencies : Spring security, Mybatis,jjwt,lombok
     email_address VARCHAR(255),
     pwd_string VARCHAR(255)
 )
+
+CREATE TABLE csye6225.`note` ( 
+	`id` varchar(36) NOT NULL ,  
+	`user_id` int(11) DEFAULT '0',   
+	`title` varchar(255) DEFAULT '',   
+	`content` varchar(255) DEFAULT '',   
+	`create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,  
+	`update_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,   
+	PRIMARY KEY (`id`) ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 ```
 
  
@@ -70,4 +79,5 @@ Open Postman, choose Body section then select raw ->JSON, type data in this form
 
  Send Post Request in Postman wiht URL:localhost:8080/user/register.
  
-## CI/CD
+## CI/CD 
+ 
