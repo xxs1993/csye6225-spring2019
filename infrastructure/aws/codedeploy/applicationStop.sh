@@ -1,5 +1,5 @@
 #!/bin/bash
-
 # stop tomcat service
-
-sudo service tomcat stop
+sudo su
+sudo systemctl daemon-reload
+sudo systemctl stop tomcat
