@@ -43,7 +43,7 @@ public class NoteController {
     RegisterService registerService;
 
 
-    @GetMapping("/note")
+    @GetMapping("/note001474067")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
         Result<List<Note>> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
