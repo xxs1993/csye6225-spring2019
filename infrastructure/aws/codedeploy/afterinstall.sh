@@ -7,6 +7,6 @@ sudo su
 cd /
 cd opt/tomcat/latest/webapps
 sudo chown tomcat:tomcat ROOT.war
-sudo chmod 777 ROOT.war
+sudo chmod 755 ROOT.war
 sudo systemctl restart tomcat
 

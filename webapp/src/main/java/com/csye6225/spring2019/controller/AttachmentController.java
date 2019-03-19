@@ -54,7 +54,7 @@ public class AttachmentController {
     @Autowired
     NoteFacadeService noteFacadeService;
 
-    @GetMapping("/noteyimujin/{noteId}/attachments")
+    @GetMapping("/noteyimujin1/{noteId}/attachments")
     public Result<List<Attachment>> getAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(value = "noteId") String noteId) throws IOException {
         Result<List<Attachment>> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
