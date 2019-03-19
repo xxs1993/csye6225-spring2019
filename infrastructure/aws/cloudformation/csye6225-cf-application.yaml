@@ -5,6 +5,7 @@ Parameters:
     Type: String
   amiId:
     Type: String
+
   roleStackName:
     Type: String
   rdsDBUser:
@@ -70,6 +71,10 @@ Resources:
         FromPort: 443
         ToPort: 443
         CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 8080
+        ToPort: 8080
+        CidrIp: 0.0.0.0/0
       Tags:
       - Key: Name
         Value: WebappSecurityGroup
@@ -79,7 +84,9 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
+
       KeyName: csye6225
+
       SecurityGroupIds:
         - !Ref WebappSecurityGroup
       DisableApiTermination: false
@@ -93,6 +100,7 @@ Resources:
             DeleteOnTermination: true
             VolumeSize: 20
       ImageId: !Sub ${amiId}
+
       IamInstanceProfile: 
         Fn::ImportValue:
           !Sub "${roleStackName}-Ec2InstanceProfile"
@@ -101,17 +109,23 @@ Resources:
           !Sub |
               #!/bin/sh
               sudo su
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.profiles.active=dev"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /etc/systemd/system/tomcat.service
-              sudo echo 'Environment="JAVA_OPTS=$JAVA_OPTS -Dbucket.name=${S3BucketName}"' >> /etc/systemd/system/tomcat.service
-              sudo systemctl daemon-reload
+              cd /opt/tomcat/latest/webapps
+              rm -rf *
+              echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh 
+              chmod +x /opt/tomcat/latest/bin/setenv.sh 
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
+              systemctl daemon-reload
+
 
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-Ec2Instance
  
+
 # # Create DynamoDB
 #   dynamoDB: 
 #     Type: AWS::DynamoDB::Table
@@ -129,6 +143,7 @@ Resources:
 #         WriteCapacityUnits: "5"
 #       TableName: "csye6225"
       
+
 # Setup DBSecurity Group
   rdsDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
