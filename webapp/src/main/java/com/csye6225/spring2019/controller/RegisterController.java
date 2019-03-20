@@ -7,6 +7,8 @@ import com.csye6225.spring2019.filter.Verifier;
 import com.csye6225.spring2019.repository.UserRepository;
 
 import com.csye6225.spring2019.service.RegisterService;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,10 +29,11 @@ public class RegisterController {
     private RegisterService registerService;
     @Autowired
     private UserRepository userRepository;
-
+    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
 
     @GetMapping("/")
     public Result<String> getUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
+        statsDClient.incrementCounter("endpoint.homepage.http.get");
         Result result = new Result();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -62,6 +65,7 @@ public class RegisterController {
 
     @PostMapping("user/register")
     public Result<String> register(@RequestBody Account account){
+        statsDClient.incrementCounter("endpoint.user/register.http.post");
         Result<String> result = new Result<>();
         AccountValidator accountValidator = new AccountValidator();
         String userName = account.getEmailAddress();
