@@ -174,8 +174,8 @@ Resources:
     Type: AWS::IAM::ManagedPolicy
     Properties: 
         Roles: 
-          - "CodeDeployEC2ServiceRole"
-          - "CodeDeployServiceRole"
+          - !Ref "CodeDeployEC2ServiceRole"
+          - !Ref "CodeDeployServiceRole"
         ManagedPolicyName: "CloudWatchPolicy"
         PolicyDocument: 
           Version: "2012-10-17"
