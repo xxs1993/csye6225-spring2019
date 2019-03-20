@@ -6,6 +6,8 @@ import com.csye6225.spring2019.filter.Verifier;
 import com.csye6225.spring2019.service.NoteService;
 import com.csye6225.spring2019.service.RegisterService;
 import com.google.common.base.Strings;
+import com.timgroup.statsd.NonBlockingStatsDClient;
+import com.timgroup.statsd.StatsDClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.csye6225.spring2019.repository.UserRepository;
@@ -36,7 +38,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 
 @RestController
 public class NoteController {
-
+    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
     @Autowired
     NoteService noteService;
     @Autowired
@@ -45,6 +47,7 @@ public class NoteController {
 
     @GetMapping("/notemazeh")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
+        statsDClient.incrementCounter("endpoint.note.http.get");
         Result<List<Note>> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -65,6 +68,7 @@ public class NoteController {
 
     @PostMapping("/note")
     public Result<Note> postNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @RequestBody Note note) throws IOException{
+        statsDClient.incrementCounter("endpoint.note.http.post");
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -103,6 +107,7 @@ public class NoteController {
 
     @GetMapping("/note/{id}")
     public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId) throws IOException{
+        statsDClient.incrementCounter("endpoint.note/{id}.http.get");
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -141,6 +146,7 @@ public class NoteController {
 
     @PutMapping("/note/{id}")
     public Result<Note> putCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId, @RequestBody Note note) throws IOException{
+        statsDClient.incrementCounter("endpoint.note/{id}.http.put");
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -180,6 +186,7 @@ public class NoteController {
 
     @DeleteMapping("/note/{id}")
     public Result<String> deleteCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId) throws IOException {
+        statsDClient.incrementCounter("endpoint.note/{id}.http.delete");
         Result<String> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
