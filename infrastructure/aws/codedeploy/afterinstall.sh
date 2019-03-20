@@ -5,7 +5,7 @@ sudo su
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
     -a fetch-config \
     -m ec2 \
-    -c file:/home/centos/cloudwatch-config.json \
+    -c file:/home/centos/cloudwatch.json \
     -s
 ## may change the service name
 sudo systemctl start cloudwatch
