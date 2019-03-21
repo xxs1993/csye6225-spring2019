@@ -14,6 +14,7 @@ public class Csye6225Application extends SpringBootServletInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Csye6225Application.class, args);
+
 	}
 
 	@Override
