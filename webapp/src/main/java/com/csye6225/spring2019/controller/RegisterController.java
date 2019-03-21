@@ -65,7 +65,7 @@ public class RegisterController {
 
     @PostMapping("user/register")
     public Result<String> register(@RequestBody Account account){
-        statsDClient.incrementCounter("endpoint.user/register.http.post");
+        statsDClient.incrementCounter("endpoint.register.http.post");
         Result<String> result = new Result<>();
         AccountValidator accountValidator = new AccountValidator();
         String userName = account.getEmailAddress();

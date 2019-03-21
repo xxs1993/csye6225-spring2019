@@ -107,7 +107,7 @@ public class NoteController {
 
     @GetMapping("/note/{id}")
     public Result<Note> getCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId) throws IOException{
-        statsDClient.incrementCounter("endpoint.note/{id}.http.get");
+        statsDClient.incrementCounter("endpoint.note.http.get");
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -146,7 +146,7 @@ public class NoteController {
 
     @PutMapping("/note/{id}")
     public Result<Note> putCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId, @RequestBody Note note) throws IOException{
-        statsDClient.incrementCounter("endpoint.note/{id}.http.put");
+        statsDClient.incrementCounter("endpoint.note.http.put");
         Result<Note> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -186,7 +186,7 @@ public class NoteController {
 
     @DeleteMapping("/note/{id}")
     public Result<String> deleteCertainNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(name = "id") String noteId) throws IOException {
-        statsDClient.incrementCounter("endpoint.note/{id}.http.delete");
+        statsDClient.incrementCounter("endpoint.note.http.delete");
         Result<String> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
