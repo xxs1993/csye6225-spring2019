@@ -17,6 +17,7 @@ import com.google.common.base.Splitter;
 import com.google.common.base.Strings;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.parameters.P;
@@ -34,15 +35,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
-
+@Log4j2
 @RestController
 public class AttachmentController {
-    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
-
+    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
 
     @Autowired
     RegisterService registerService;
@@ -61,11 +60,13 @@ public class AttachmentController {
 
     @GetMapping("/note/{noteId}/attachments")
     public Result<List<Attachment>> getAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(value = "noteId") String noteId) throws IOException {
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments.http.get");
+        statsDClient.incrementCounter("endpoint.attachments.http.get");
+        log.info("Searching for an attachment");
         Result<List<Attachment>> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
         if (account == null || !registerService.checkAccount(account)) {
+            log.warn("Unauthorized");
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
         } else {
@@ -73,18 +74,21 @@ public class AttachmentController {
             Account user = registerService.findByEmail(email);
             Note note = noteService.getNoteByNoteId(noteId);
             if (note == null) {
+                log.warn("Cannot find the note by id : "+noteId);
                 res.setStatusCode(404);
                 res.setMessage("Not Found");
                 httpServletResponse.setStatus(SC_NOT_FOUND);
                 httpServletResponse.sendError(SC_NOT_FOUND, "Not Found");
             } else {
                 if ((note.getUserId() != user.getId())) {
+                    log.warn("The note not belong to the user : " + user.getId());
                     res.setStatusCode(401);
                     res.setMessage("Unauthorized");
                     httpServletResponse.setStatus(SC_UNAUTHORIZED);
                     httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
                     return res;
                 } else {
+                    log.info("Searching for a note successfully");
                     res.setData(attachmentService.findAttachmentsByNoteId(noteId));
                     res.setStatusCode(200);
                     res.setMessage("OK");
@@ -97,18 +101,21 @@ public class AttachmentController {
     @PostMapping("/note/{noteId}/attachments")
     public Result<Attachment> postAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable("noteId") String noteId, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         // Basic Auth;
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments.http.post");
+        statsDClient.incrementCounter("endpoint.attachments.http.post");
+        log.info("Add a new attachment to the note ");
         Result<Attachment> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
         // Exception test
         if (account == null || !registerService.checkAccount(account)) {
+            log.warn("Unauthorized");
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
             return res;
         } else {
             // check noteId with user
             if (noteService.getNoteByNoteId(noteId) == null) {
+                log.warn("Cannot find the note by id : "+noteId);
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST, "Bad Request");
                 return res;
@@ -142,6 +149,7 @@ public class AttachmentController {
             res.setData(attachment);
             res.setMessage("OK");
             res.setStatusCode(200);
+            log.info("add a attachment successfully");
             //file.delete();
         }
         return res;
@@ -150,7 +158,8 @@ public class AttachmentController {
     @PutMapping("/note/{noteId}/attachments/{idAttachments}")
     public Result<Attachment> updateAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable("noteId") String noteId, @PathVariable("idAttachments") String idAttachment, @RequestParam("file") MultipartFile multipartFile) throws IOException {
         // Basic Auth
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments/{idAttachments}.http.put");
+        statsDClient.incrementCounter("endpoint.attachments.http.put");
+        log.info("Update a attachment");
         Result<Attachment> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -170,6 +179,7 @@ public class AttachmentController {
             String userEmail = account.getEmailAddress();
             Account user = registerService.findByEmail(userEmail);
             if (user.getId() != noteService.getNoteByNoteId(noteId).getUserId()) {
+                log.warn("The note note belong to the user : "+user.getId());
                 httpServletResponse.setStatus(SC_UNAUTHORIZED);
                 httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
                 return res;
@@ -180,6 +190,7 @@ public class AttachmentController {
 
             Attachment attachment = attachmentService.getAttachmentById(idAttachment);
             if(attachment == null || note==null || !note.getId().equals(attachment.getNoteId())){
+                log.warn("Cannot find the note by id " + noteId);
                 httpServletResponse.setStatus(SC_NOT_FOUND);
                 httpServletResponse.sendError(SC_NOT_FOUND,"Not Found");
                 return res;
@@ -199,6 +210,7 @@ public class AttachmentController {
             attachment.setUpdateTime(new Timestamp(System.currentTimeMillis()));
             noteFacadeService.updateAttachment(inputStream,fileName,fileType,(double)fileSize,idAttachment);
             httpServletResponse.setStatus(SC_NO_CONTENT);
+            log.info("Updating a attachment successfully ");
             return res;
         }
     }
@@ -239,17 +251,20 @@ public class AttachmentController {
 
     @DeleteMapping("/note/{noteId}/attachments/{idAttachments}")
     public Result<String> deleteAttachments(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest, @PathVariable("noteId") String noteId, @PathVariable("idAttachments") String idAttachment) throws IOException {
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments/{idAttachments}.http.delete");
+        statsDClient.incrementCounter("endpoint.attachments.http.delete");
+        log.info("Start to delete a attachment");
         Result<String> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
         if (account == null || !registerService.checkAccount(account)) {
+            log.warn("Unauthorized");
             httpServletResponse.setStatus(SC_UNAUTHORIZED);
             httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
             return res;
         } else {
             Note note = noteService.getNoteByNoteId(noteId);
             if (note == null) {
+                log.warn("Bad note info");
                 httpServletResponse.setStatus(SC_BAD_REQUEST);
                 httpServletResponse.sendError(SC_BAD_REQUEST, "Bad Request");
                 return res;
@@ -258,6 +273,7 @@ public class AttachmentController {
             String userEmail = account.getEmailAddress();
             Account user = registerService.findByEmail(userEmail);
             if (user.getId() != noteService.getNoteByNoteId(noteId).getUserId()) {
+                log.warn("The note not belong to user : "+user.getId());
                 httpServletResponse.setStatus(SC_UNAUTHORIZED);
                 httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
                 return res;
@@ -268,7 +284,7 @@ public class AttachmentController {
                 httpServletResponse.sendError(SC_UNAUTHORIZED, "Unauthorized");
                 return res;
             }
-
+            log.warn("Delete an attachment successfully");
             noteFacadeService.deleteAttachment(idAttachment);
             httpServletResponse.setStatus(SC_NO_CONTENT);
         }
