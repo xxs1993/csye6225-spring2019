@@ -38,7 +38,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 
 @RestController
 public class NoteController {
-    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
+    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
     @Autowired
     NoteService noteService;
     @Autowired
