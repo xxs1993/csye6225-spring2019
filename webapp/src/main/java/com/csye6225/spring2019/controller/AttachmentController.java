@@ -7,6 +7,7 @@ import com.csye6225.spring2019.entity.Attachment;
 import com.csye6225.spring2019.entity.Note;
 import com.csye6225.spring2019.facade.NoteFacadeService;
 import com.csye6225.spring2019.filter.Verifier;
+import com.csye6225.spring2019.metrics.MetricsClientBean;
 import com.csye6225.spring2019.service.AttachmentService;
 import com.csye6225.spring2019.service.NoteService;
 import com.csye6225.spring2019.service.RegisterService;
@@ -41,8 +42,7 @@ import static javax.servlet.http.HttpServletResponse.*;
 
 @RestController
 public class AttachmentController {
-    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
-
+    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
 
     @Autowired
     RegisterService registerService;

@@ -29,7 +29,7 @@ public class RegisterController {
     private RegisterService registerService;
     @Autowired
     private UserRepository userRepository;
-    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "statsd-host", 8125);
+    private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
 
     @GetMapping("/")
     public Result<String> getUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
