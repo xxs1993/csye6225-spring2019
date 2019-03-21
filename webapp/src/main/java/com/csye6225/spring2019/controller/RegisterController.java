@@ -35,7 +35,7 @@ public class RegisterController {
     @GetMapping("/")
     public Result<String> getUser(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
         statsDClient.incrementCounter("endpoint.homepage.http.get");
-        log.info("Begin register");
+        log.info("Get Data");
         Result result = new Result();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
