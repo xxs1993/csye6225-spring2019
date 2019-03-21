@@ -7,7 +7,6 @@ import com.csye6225.spring2019.entity.Attachment;
 import com.csye6225.spring2019.entity.Note;
 import com.csye6225.spring2019.facade.NoteFacadeService;
 import com.csye6225.spring2019.filter.Verifier;
-import com.csye6225.spring2019.metrics.MetricsClientBean;
 import com.csye6225.spring2019.service.AttachmentService;
 import com.csye6225.spring2019.service.NoteService;
 import com.csye6225.spring2019.service.RegisterService;
@@ -61,7 +60,7 @@ public class AttachmentController {
 
     @GetMapping("/note/{noteId}/attachments")
     public Result<List<Attachment>> getAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable(value = "noteId") String noteId) throws IOException {
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments.http.get");
+        statsDClient.incrementCounter("endpoint.attachments.http.get");
         Result<List<Attachment>> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -97,7 +96,7 @@ public class AttachmentController {
     @PostMapping("/note/{noteId}/attachments")
     public Result<Attachment> postAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable("noteId") String noteId, @RequestParam(value = "file") MultipartFile multipartFile) throws IOException {
         // Basic Auth;
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments.http.post");
+        statsDClient.incrementCounter("endpoint.attachments.http.post");
         Result<Attachment> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -150,7 +149,7 @@ public class AttachmentController {
     @PutMapping("/note/{noteId}/attachments/{idAttachments}")
     public Result<Attachment> updateAttachments(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, @PathVariable("noteId") String noteId, @PathVariable("idAttachments") String idAttachment, @RequestParam("file") MultipartFile multipartFile) throws IOException {
         // Basic Auth
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments/{idAttachments}.http.put");
+        statsDClient.incrementCounter("endpoint.attachments.http.put");
         Result<Attachment> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
@@ -239,7 +238,7 @@ public class AttachmentController {
 
     @DeleteMapping("/note/{noteId}/attachments/{idAttachments}")
     public Result<String> deleteAttachments(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest, @PathVariable("noteId") String noteId, @PathVariable("idAttachments") String idAttachment) throws IOException {
-        statsDClient.incrementCounter("endpoint.note/{noteID}/attachments/{idAttachments}.http.delete");
+        statsDClient.incrementCounter("endpoint.attachments.http.delete");
         Result<String> res = new Result<>();
         String auth = httpServletRequest.getHeader("Authorization");
         Account account = Verifier.isVerified(auth);
