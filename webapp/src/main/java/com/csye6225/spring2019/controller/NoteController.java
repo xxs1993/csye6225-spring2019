@@ -47,7 +47,8 @@ public class NoteController {
     RegisterService registerService;
 
 
-    @GetMapping("/notemazeh")
+
+    @GetMapping("/note")
     public Result<List<Note>> getAllNote(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException{
         statsDClient.incrementCounter("endpoint.note.http.get");
         log.info("Get the notes");
