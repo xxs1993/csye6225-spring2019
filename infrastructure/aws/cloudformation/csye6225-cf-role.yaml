@@ -7,7 +7,9 @@ Parameters:
 Resources:
   CodeDeployEC2ServiceRole:      
     Type: AWS::IAM::Role
-    Properties: 
+    Properties:
+        ManagedPolicyArns:
+          - "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
         AssumeRolePolicyDocument: 
           Version: "2012-10-17"
           Statement: 
@@ -34,7 +36,28 @@ Resources:
                   - "codedeploy.amazonaws.com"
               Action: 
                 - "sts:AssumeRole"
-        RoleName: "CodeDeployServiceRole" 
+        RoleName: "CodeDeployServiceRole"
+
+  LambdaRole:      
+      Type: AWS::IAM::Role
+      Properties: 
+          ManagedPolicyArns:
+            - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+            - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+            - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+            - "arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole"
+          AssumeRolePolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Principal: 
+                  Service: 
+                    - "lambda.amazonaws.com"
+                Action: 
+                  - "sts:AssumeRole"
+          Path: "/"
+          RoleName: "LambdaRole" 
 
         ## Role
 
