@@ -142,7 +142,17 @@ Resources:
 #         ReadCapacityUnits: "5"
 #         WriteCapacityUnits: "5"
 #       TableName: "csye6225"
-      
+
+# Create Topic
+  snsTopic:      
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: "SNSTopic-DisplayName"
+      Subscription:
+        - Endpoint: " "
+          Protocol: "lambda"
+      TopicName: !Sub ${AWS::StackName}-SNS-EmailSending
+
 
 # Setup DBSecurity Group
   rdsDBSecurityGroup:
