@@ -240,6 +240,16 @@ Resources:
 
       InstanceProfileName: "CodeDeployServiceRole"
       ## CodeDeploy
+  LambdaFunctionInsProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - 
+          !Ref "LambdaRole"
+
+      InstanceProfileName: "LambdaRole"
+
 Outputs:
   EC2InstanceProfile: 
     Description: Codeploy Role for Ec2 Instance
