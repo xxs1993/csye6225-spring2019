@@ -20,125 +20,125 @@ Parameters:
     Type: String
 Resources: 
 
-#   Application:
-#     Type: AWS::CodeDeploy::Application
-#     Properties:
-#       ApplicationName: "csye6225-webapp"     
-#       ComputePlatform: Server
+  Application:
+    Type: AWS::CodeDeploy::Application
+    Properties:
+      ApplicationName: "csye6225-webapp"     
+      ComputePlatform: Server
 
-#   DeploymentGroup: 
-#     Type: AWS::CodeDeploy::DeploymentGroup
-#     Properties: 
-#       ApplicationName: !Ref Application
-#       DeploymentGroupName: "csye6225-webapp-deployment"
-#       DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
-#       AutoRollbackConfiguration:
-#         Enabled: True
-#         Events: 
-#          - "DEPLOYMENT_FAILURE"
-#       DeploymentStyle:
-#         DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
-#         DeploymentType: "IN_PLACE"
-#       Ec2TagFilters:
-#           - 
-#             Key: 
-#               "Name"
-#             Value: 
-#               !Sub ${AWS::StackName}-Ec2Instance
-#             Type: 
-#               "KEY_AND_VALUE"
-#       ServiceRoleArn:
-#         Fn::ImportValue:
-#           !Sub ${roleStackName}-CodeDeployServiceRole-Arn
+  DeploymentGroup: 
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties: 
+      ApplicationName: !Ref Application
+      DeploymentGroupName: "csye6225-webapp-deployment"
+      DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
+      AutoRollbackConfiguration:
+        Enabled: True
+        Events: 
+         - "DEPLOYMENT_FAILURE"
+      DeploymentStyle:
+        DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
+        DeploymentType: "IN_PLACE"
+      Ec2TagFilters:
+          - 
+            Key: 
+              "Name"
+            Value: 
+              !Sub ${AWS::StackName}-Ec2Instance
+            Type: 
+              "KEY_AND_VALUE"
+      ServiceRoleArn:
+        Fn::ImportValue:
+          !Sub ${roleStackName}-CodeDeployServiceRole-Arn
 
-# # Setup Security Group for Ec2 Instance
-#   WebappSecurityGroup:
-#     Type: AWS::EC2::SecurityGroup
-#     Properties:
-#       GroupDescription: Security Group for Web Servers
-#       VpcId: 
-#         Fn::ImportValue:
-#           !Sub "${refStackName}-vpcId"
-#       SecurityGroupIngress:
-#       - IpProtocol: tcp
-#         FromPort: 22
-#         ToPort: 22
-#         CidrIp: 0.0.0.0/0
-#       - IpProtocol: tcp
-#         FromPort: 80
-#         ToPort: 80
-#         CidrIp: 0.0.0.0/0
-#       - IpProtocol: tcp
-#         FromPort: 443
-#         ToPort: 443
-#         CidrIp: 0.0.0.0/0
-#       - IpProtocol: tcp
-#         FromPort: 8080
-#         ToPort: 8080
-#         CidrIp: 0.0.0.0/0
-#       Tags:
-#       - Key: Name
-#         Value: WebappSecurityGroup
+# Setup Security Group for Ec2 Instance
+  WebappSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for Web Servers
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${refStackName}-vpcId"
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 8080
+        ToPort: 8080
+        CidrIp: 0.0.0.0/0
+      Tags:
+      - Key: Name
+        Value: WebappSecurityGroup
 
-# # Create Ec2 Instance
-#   EC2Instance:
-#     Type: AWS::EC2::Instance
-#     Properties:
-#       InstanceType: t2.micro
+# Create Ec2 Instance
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
 
-#       KeyName: csye6225
+      KeyName: csye6225
 
-#       SecurityGroupIds:
-#         - !Ref WebappSecurityGroup
-#       DisableApiTermination: false
-#       SubnetId:
-#         Fn::ImportValue:
-#           !Sub "${refStackName}-SubA"
-#       BlockDeviceMappings: 
-#         - DeviceName: /dev/sdm
-#           Ebs: 
-#             VolumeType: gp2
-#             DeleteOnTermination: true
-#             VolumeSize: 20
-#       ImageId: !Sub ${amiId}
+      SecurityGroupIds:
+        - !Ref WebappSecurityGroup
+      DisableApiTermination: false
+      SubnetId:
+        Fn::ImportValue:
+          !Sub "${refStackName}-SubA"
+      BlockDeviceMappings: 
+        - DeviceName: /dev/sdm
+          Ebs: 
+            VolumeType: gp2
+            DeleteOnTermination: true
+            VolumeSize: 20
+      ImageId: !Sub ${amiId}
 
-#       IamInstanceProfile: 
-#         Fn::ImportValue:
-#           !Sub "${roleStackName}-Ec2InstanceProfile"
-#       UserData:
-#         Fn::Base64:
-#           !Sub |
-#               #!/bin/sh
-#               sudo su
-#               cd /opt/tomcat/latest/webapps
-#               rm -rf *
-#               echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh 
-#               chmod +x /opt/tomcat/latest/bin/setenv.sh 
-#               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
-#               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /opt/tomcat/latest/bin/setenv.sh
-#               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /opt/tomcat/latest/bin/setenv.sh
-#               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
-#               echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
-#               systemctl daemon-reload
+      IamInstanceProfile: 
+        Fn::ImportValue:
+          !Sub "${roleStackName}-Ec2InstanceProfile"
+      UserData:
+        Fn::Base64:
+          !Sub |
+              #!/bin/sh
+              sudo su
+              cd /opt/tomcat/latest/webapps
+              rm -rf *
+              echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh 
+              chmod +x /opt/tomcat/latest/bin/setenv.sh 
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
+              echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
+              systemctl daemon-reload
 
 
-#       Tags:
-#       reate DynamoDB
-#   dynamoDB: 
-#     Type: AWS::DynamoDB::Table
-#     Properties: 
-#       AttributeDefinitions: 
-#         - 
-#           AttributeName: "id"
-#           AttributeType: "S"
-#       KeySchema: 
-#         - 
-#           AttributeName: "id"
-#           KeyType: "HASH"
-#       ProvisionedThroughput: 
-#         ReadCapacityUnits: "5"
-#         WriteCapacityUnits: "5"
-#       TableName: "csye6225"
+      Tags:
+      reate DynamoDB
+  dynamoDB: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "csye6225"
 
 # Create Topic
   snsTopic:      
@@ -151,54 +151,54 @@ Resources:
       TopicName: password_reset
 
 
-# # Setup DBSecurity Group
-#   rdsDBSecurityGroup:
-#     Type: AWS::EC2::SecurityGroup
-#     Properties:
-#       GroupDescription: Security Group for Web Servers
-#       VpcId: 
-#         Fn::ImportValue:
-#           !Sub "${refStackName}-vpcId"
-#       SecurityGroupIngress:
-#       - SourceSecurityGroupId: !Ref WebappSecurityGroup
-#         IpProtocol: tcp
-#         FromPort: "3306"
-#         ToPort: "3306"
-#       Tags:
-#       - Key: Name
-#         Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
+# Setup DBSecurity Group
+  rdsDBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security Group for Web Servers
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${refStackName}-vpcId"
+      SecurityGroupIngress:
+      - SourceSecurityGroupId: !Ref WebappSecurityGroup
+        IpProtocol: tcp
+        FromPort: "3306"
+        ToPort: "3306"
+      Tags:
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
   
-# # Setup RDS Subnet Group
-#   rdsSubnetGroup: 
-#     Type: "AWS::RDS::DBSubnetGroup"
-#     Properties: 
-#       DBSubnetGroupDescription: "Subnet for RDS instances"
-#       SubnetIds:
-#       - Fn::ImportValue:
-#           !Sub "${refStackName}-SubA"
-#       - Fn::ImportValue:
-#           !Sub "${refStackName}-SubB"
-#       - Fn::ImportValue:
-#           !Sub "${refStackName}-SubC"
-#       Tags:
-#         - Key: Name
-#           Value: !Sub ${AWS::StackName}-csye6225-rdsSubnetGroup
+# Setup RDS Subnet Group
+  rdsSubnetGroup: 
+    Type: "AWS::RDS::DBSubnetGroup"
+    Properties: 
+      DBSubnetGroupDescription: "Subnet for RDS instances"
+      SubnetIds:
+      - Fn::ImportValue:
+          !Sub "${refStackName}-SubA"
+      - Fn::ImportValue:
+          !Sub "${refStackName}-SubB"
+      - Fn::ImportValue:
+          !Sub "${refStackName}-SubC"
+      Tags:
+        - Key: Name
+          Value: !Sub ${AWS::StackName}-csye6225-rdsSubnetGroup
 
-# #Create RDS Instance
-#   rdsInstance:
-#     Type: AWS::RDS::DBInstance
-#     Properties:
-#       AllocatedStorage: 5
-#       DBName: csye6225
-#       Engine: MySQL
-#       DBInstanceClass: db.t2.medium
-#       MultiAZ: false
-#       DBInstanceIdentifier: csye6225-spring2019
-#       MasterUsername: csye6225master
-#       MasterUserPassword: csye6225password
-#       PubliclyAccessible: true
-#       DBSubnetGroupName: !Ref rdsSubnetGroup
-#       VPCSecurityGroups: 
-#       - !GetAtt rdsDBSecurityGroup.GroupId- Key: Name
-#         Value: !Sub ${AWS::StackName}-Ec2Instance
+#Create RDS Instance
+  rdsInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 5
+      DBName: csye6225
+      Engine: MySQL
+      DBInstanceClass: db.t2.medium
+      MultiAZ: false
+      DBInstanceIdentifier: csye6225-spring2019
+      MasterUsername: csye6225master
+      MasterUserPassword: csye6225password
+      PubliclyAccessible: true
+      DBSubnetGroupName: !Ref rdsSubnetGroup
+      VPCSecurityGroups: 
+      - !GetAtt rdsDBSecurityGroup.GroupId- Key: Name
+        Value: !Sub ${AWS::StackName}-Ec2Instance
   
