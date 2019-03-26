@@ -123,7 +123,11 @@ Resources:
 
 
       Tags:
-      reate DynamoDB
+      - Key: Name
+        Value: !Sub ${AWS::StackName}-Ec2Instance
+ 
+
+# Create DynamoDB
   dynamoDB: 
     Type: AWS::DynamoDB::Table
     Properties: 
@@ -199,6 +203,5 @@ Resources:
       PubliclyAccessible: true
       DBSubnetGroupName: !Ref rdsSubnetGroup
       VPCSecurityGroups: 
-      - !GetAtt rdsDBSecurityGroup.GroupId- Key: Name
-        Value: !Sub ${AWS::StackName}-Ec2Instance
+      - !GetAtt rdsDBSecurityGroup.GroupId
   
