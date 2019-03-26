@@ -16,7 +16,8 @@ Parameters:
     Type: String
   RDSEndPoint:
     Type: String
-
+  lambdaArn:
+    Type: String
 Resources: 
 
   Application:
@@ -126,23 +127,33 @@ Resources:
         Value: !Sub ${AWS::StackName}-Ec2Instance
  
 
-# # Create DynamoDB
-#   dynamoDB: 
-#     Type: AWS::DynamoDB::Table
-#     Properties: 
-#       AttributeDefinitions: 
-#         - 
-#           AttributeName: "id"
-#           AttributeType: "S"
-#       KeySchema: 
-#         - 
-#           AttributeName: "id"
-#           KeyType: "HASH"
-#       ProvisionedThroughput: 
-#         ReadCapacityUnits: "5"
-#         WriteCapacityUnits: "5"
-#       TableName: "csye6225"
-      
+# Create DynamoDB
+  dynamoDB: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "csye6225"
+
+# Create Topic
+  snsTopic:      
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: "SNSTopic-DisplayName"
+      Subscription:
+        - Endpoint: !Sub ${lambdaArn}
+          Protocol: "lambda"
+      TopicName: !Sub ${AWS::StackName}-SNS-EmailSending
+
 
 # Setup DBSecurity Group
   rdsDBSecurityGroup:
