@@ -126,22 +126,22 @@ Resources:
         Value: !Sub ${AWS::StackName}-Ec2Instance
  
 
-# # Create DynamoDB
-#   dynamoDB: 
-#     Type: AWS::DynamoDB::Table
-#     Properties: 
-#       AttributeDefinitions: 
-#         - 
-#           AttributeName: "id"
-#           AttributeType: "S"
-#       KeySchema: 
-#         - 
-#           AttributeName: "id"
-#           KeyType: "HASH"
-#       ProvisionedThroughput: 
-#         ReadCapacityUnits: "5"
-#         WriteCapacityUnits: "5"
-#       TableName: "csye6225"
+# Create DynamoDB
+  dynamoDB: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TableName: "csye6225"
 
 # Create Topic
   snsTopic:      

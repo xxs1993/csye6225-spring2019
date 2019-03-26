@@ -261,9 +261,4 @@ Outputs:
     Value: !GetAtt CodeDeployServiceRole.Arn
     Export:
       Name: !Sub ${AWS::StackName}-CodeDeployServiceRole-Arn
-  LambdaRole: 
-    Description: Lambda Role 
-    Value: !GetAtt LambdaRole.Arn
-    Export:
-      Name: !Sub ${AWS::StackName}-LambdaRole-Arn
 
