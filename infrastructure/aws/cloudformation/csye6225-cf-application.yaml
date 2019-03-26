@@ -152,7 +152,7 @@ Resources:
       Subscription:
         - Endpoint: !Sub ${lambdaArn}
           Protocol: "lambda"
-      TopicName: !Sub ${AWS::StackName}-SNS-EmailSending
+      TopicName: password_reset
 
 
 # Setup DBSecurity Group
