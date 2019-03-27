@@ -235,7 +235,7 @@ Resources:
       Subscription:
         - Endpoint: !GetAtt Lambda.Arn
           Protocol: "lambda"
-      TopicName: password_reset4
+      TopicName: password_reset
 
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
