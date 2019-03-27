@@ -142,6 +142,9 @@ Resources:
       ProvisionedThroughput: 
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
+      TimeToLiveSpecification:
+        AttributeName: TTL
+        Enabled: true
       TableName: "csye6225"
 
 # Create Topic
@@ -152,7 +155,7 @@ Resources:
       Subscription:
         - Endpoint: !Sub ${lambdaArn}
           Protocol: "lambda"
-      TopicName: !Sub ${AWS::StackName}-SNS-EmailSending
+      TopicName: password_reset
 
 
 # Setup DBSecurity Group
@@ -204,6 +207,4 @@ Resources:
       DBSubnetGroupName: !Ref rdsSubnetGroup
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
-##Application
-##test5
   
