@@ -211,6 +211,8 @@ Resources:
       FunctionName: csye6225-lambda-function
       Handler: "index.handler"
       Role: !Sub ${roleArn}
+      MemorySize: 256
+      Timeout: 120
       Code: 
         ZipFile: |
           import json
