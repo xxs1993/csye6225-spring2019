@@ -208,3 +208,10 @@ Resources:
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
   
+  
+  SourceMapping:
+    Type: AWS::Lambda::EventSourceMapping
+    Properties: 
+      Enabled: true
+      EventSourceArn: !Ref snsTopic
+      FunctionName: !Sub ${AWS::StackName}
