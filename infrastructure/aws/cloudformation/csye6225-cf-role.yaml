@@ -7,7 +7,10 @@ Parameters:
 Resources:
   CodeDeployEC2ServiceRole:      
     Type: AWS::IAM::Role
-    Properties: 
+    Properties:
+        ManagedPolicyArns:
+          - "arn:aws:iam::aws:policy/AmazonSNSFullAccess"
+          - "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
         AssumeRolePolicyDocument: 
           Version: "2012-10-17"
           Statement: 
@@ -24,6 +27,7 @@ Resources:
     Properties: 
         ManagedPolicyArns:
           - "arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole"
+          - "arn:aws:iam::aws:policy/CloudWatchAgentAdminPolicy"
         AssumeRolePolicyDocument: 
           Version: "2012-10-17"
           Statement: 
@@ -34,7 +38,28 @@ Resources:
                   - "codedeploy.amazonaws.com"
               Action: 
                 - "sts:AssumeRole"
-        RoleName: "CodeDeployServiceRole" 
+        RoleName: "CodeDeployServiceRole"
+
+  LambdaRole:      
+      Type: AWS::IAM::Role
+      Properties: 
+          ManagedPolicyArns:
+            - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+            - "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+            - "arn:aws:iam::aws:policy/AmazonSESFullAccess"
+            - "arn:aws:iam::aws:policy/service-role/AWSLambdaDynamoDBExecutionRole"
+          AssumeRolePolicyDocument: 
+            Version: "2012-10-17"
+            Statement: 
+              - 
+                Effect: "Allow"
+                Principal: 
+                  Service: 
+                    - "lambda.amazonaws.com"
+                Action: 
+                  - "sts:AssumeRole"
+          Path: "/"
+          RoleName: "LambdaRole" 
 
         ## Role
 
@@ -170,34 +195,71 @@ Resources:
                       - "deploymentconfig:CodeDeployDefault.AllAtOnce"
         Users:
           - "circleci"
-  CloudWatchPolicy:
+  AWSLambda:
     Type: AWS::IAM::ManagedPolicy
     Properties: 
-        Roles: 
-          - !Ref "CodeDeployEC2ServiceRole"
-          - !Ref "CodeDeployServiceRole"
-        ManagedPolicyName: "CloudWatchPolicy"
+        ManagedPolicyName: "AWSLambda"
         PolicyDocument: 
           Version: "2012-10-17"
           Statement: 
             - 
               Effect: "Allow"
               Action:
-                - "cloudwatch:PutMetricData"
-                - "ec2:DescribeTags"
-                - "logs:PutLogEvents"
-                - "logs:DescribeLogStreams"
-                - "logs:DescribeLogGroups"
-                - "logs:CreateLogStream"
-                - "logs:CreateLogGroup"
+                - "cloudformation:DescribeChangeSet"
+                - "cloudformation:DescribeStackResources"
+                - "cloudformation:DescribeStacks"
+                - "cloudformation:GetTemplate"
+                - "cloudformation:ListStackResources"
+                - "cloudwatch:*"
+                - "cognito-identity:ListIdentityPools"
+                - "cognito-sync:GetCognitoEvents"
+                - "cognito-sync:SetCognitoEvents"
+                - "dynamodb:*"
+                - "ec2:DescribeSecurityGroups"
+                - "ec2:DescribeSubnets"
+                - "ec2:DescribeVpcs"
+                - "events:*"
+                - "iam:GetPolicy"
+                - "iam:GetPolicyVersion"
+                - "iam:GetRole"
+                - "iam:GetRolePolicy"
+                - "iam:ListAttachedRolePolicies"
+                - "iam:ListRolePolicies"
+                - "iam:ListRoles"
+                - "iam:PassRole"
+                - "iot:AttachPrincipalPolicy"
+                - "iot:AttachThingPrincipal"
+                - "iot:CreateKeysAndCertificate"
+                - "iot:CreatePolicy"
+                - "iot:CreateThing"
+                - "iot:CreateTopicRule"
+                - "iot:DescribeEndpoint"
+                - "iot:GetTopicRule"
+                - "iot:ListPolicies"
+                - "iot:ListThings"
+                - "iot:ListTopicRules"
+                - "iot:ReplaceTopicRule"
+                - "kinesis:DescribeStream"
+                - "kinesis:ListStreams"
+                - "kinesis:PutRecord"
+                - "kms:ListAliases"
+                - "lambda:*"
+                - "logs:*"
+                - "s3:*"
+                - "sns:ListSubscriptions"
+                - "sns:ListSubscriptionsByTopic"
+                - "sns:ListTopics"
+                - "sns:Publish"
+                - "sns:Subscribe"
+                - "sns:Unsubscribe"
+                - "sqs:ListQueues"
+                - "sqs:SendMessage"
+                - "tag:GetResources"
+                - "xray:PutTelemetryRecords"
+                - "xray:PutTraceSegments"
               Resource: "*"
-            -
-              Effect: "Allow"
-              Action:
-              - "ssm:GetParameter"
-              - "ssm:PutParameter"
-              Resource: 
-                - "arn:aws:ssm:*:*:parameter/AmazonCloudWatch-*"
+        Users:
+          - "circleci"
 
   EC2InstanceProfile: 
     Type: "AWS::IAM::InstanceProfile"
@@ -217,6 +279,16 @@ Resources:
 
       InstanceProfileName: "CodeDeployServiceRole"
       ## CodeDeploy
+  LambdaFunctionInsProfile: 
+    Type: "AWS::IAM::InstanceProfile"
+    Properties: 
+      Path: "/"
+      Roles: 
+        - 
+          !Ref "LambdaRole"
+
+      InstanceProfileName: "LambdaRole"
+
 Outputs:
   EC2InstanceProfile: 
     Description: Codeploy Role for Ec2 Instance
