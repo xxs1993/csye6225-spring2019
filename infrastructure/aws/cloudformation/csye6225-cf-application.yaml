@@ -16,7 +16,10 @@ Parameters:
     Type: String
   RDSEndPoint:
     Type: String
-
+  roleArn:
+    Type: String
+  fromEmail:
+    Type: String
 Resources: 
 
   Application:
@@ -126,23 +129,28 @@ Resources:
         Value: !Sub ${AWS::StackName}-Ec2Instance
  
 
-# # Create DynamoDB
-#   dynamoDB: 
-#     Type: AWS::DynamoDB::Table
-#     Properties: 
-#       AttributeDefinitions: 
-#         - 
-#           AttributeName: "id"
-#           AttributeType: "S"
-#       KeySchema: 
-#         - 
-#           AttributeName: "id"
-#           KeyType: "HASH"
-#       ProvisionedThroughput: 
-#         ReadCapacityUnits: "5"
-#         WriteCapacityUnits: "5"
-#       TableName: "csye6225"
-      
+# Create DynamoDB
+  dynamoDB: 
+    Type: AWS::DynamoDB::Table
+    Properties: 
+      AttributeDefinitions: 
+        - 
+          AttributeName: "id"
+          AttributeType: "S"
+      KeySchema: 
+        - 
+          AttributeName: "id"
+          KeyType: "HASH"
+      ProvisionedThroughput: 
+        ReadCapacityUnits: "5"
+        WriteCapacityUnits: "5"
+      TimeToLiveSpecification:
+        AttributeName: TTL
+        Enabled: true
+      TableName: "csye6225"
+
+
+
 
 # Setup DBSecurity Group
   rdsDBSecurityGroup:
@@ -193,6 +201,51 @@ Resources:
       DBSubnetGroupName: !Ref rdsSubnetGroup
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
-##Application
-##test5
+
+  # Create Topic
   
+  
+  Lambda:
+    Type: "AWS::Lambda::Function"
+    Properties: 
+      FunctionName: csye6225-lambda-function
+      Handler: "index.handler"
+      Role: !Sub ${roleArn}
+      MemorySize: 256
+      Timeout: 120
+      Code: 
+        ZipFile: |
+          import json
+          import cfnresponse
+          def handler(event, context):
+            responseValue = int(event['ResourceProperties']['Input']) * 5
+            responseData = {}
+            responseData['Data'] = responseValue
+            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, "CustomResourcePhysicalID")
+      Runtime: "python3.6"
+      Environment:
+        Variables:
+          DynamoDB_TableName: csye6225
+          From_EmailAddress: !Sub ${fromEmail}
+
+  snsTopic:      
+    Type: AWS::SNS::Topic
+    Properties: 
+      DisplayName: "SNSTopic-DisplayName"
+      Subscription:
+        - Endpoint: !GetAtt Lambda.Arn
+          Protocol: "lambda"
+      TopicName: password_reset
+
+  LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !GetAtt 
+        - Lambda
+        - Arn
+      Action: 'lambda:InvokeFunction'
+      Principal: sns.amazonaws.com
+      SourceArn: !Ref snsTopic
+      
+
+    

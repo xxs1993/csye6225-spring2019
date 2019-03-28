@@ -7,10 +7,13 @@ import com.csye6225.spring2019.filter.Verifier;
 import com.csye6225.spring2019.repository.UserRepository;
 
 import com.csye6225.spring2019.service.RegisterService;
+import com.csye6225.spring2019.util.SNSUtil;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,11 +28,19 @@ import static javax.servlet.http.HttpServletResponse.SC_UNAUTHORIZED;
 @Log4j2
 @RestController
 public class RegisterController {
+    @Autowired
+    private AccountValidator accountValidator;
+
+    @Autowired
+    private PasswordValidator passwordValidator;
 
     @Autowired
     private RegisterService registerService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private Environment environment;
     private static final StatsDClient statsDClient = new NonBlockingStatsDClient("my.prefix", "localhost", 8125);
 
     @GetMapping("/")
@@ -62,7 +73,7 @@ public class RegisterController {
 
     }
 
-    @GetMapping("/account")
+    @GetMapping("account")
     public List<Account> getAll(){
         return userRepository.findAll();
     }
@@ -72,12 +83,10 @@ public class RegisterController {
         statsDClient.incrementCounter("endpoint.register.http.post");
         log.info("Begin to register");
         Result<String> result = new Result<>();
-        AccountValidator accountValidator = new AccountValidator();
         String userName = account.getEmailAddress();
         String password = account.getPwdString();
         if(accountValidator.validate(userName)) {
             if (userRepository.findByEmailAddress(userName) == null) {
-                PasswordValidator passwordValidator = new PasswordValidator();
                 if (passwordValidator.validate(password)) {
                     Account user = new Account();
                     user.setEmailAddress(userName);
@@ -106,6 +115,33 @@ public class RegisterController {
             result.setStatusCode(603);
             return result;
         }
+    }
+
+    @PostMapping("reset")
+    public Result<String> reset(HttpServletRequest request,HttpServletResponse response,@RequestBody Account account) throws Exception{
+        log.info("Start to reset !");
+        Result<String> result = new Result<>();
+        if(Strings.isEmpty(account.getEmailAddress())){
+            log.error("No email found for reset");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bad Request");
+            return result;
+        }
+        if(!accountValidator.validate(account.getEmailAddress()) || registerService.findByEmail(account.getEmailAddress())==null){
+            log.error("Email not registered : " +account.getEmailAddress());
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST,"Bad Request : Not registered email");
+            return result;
+        }
+        String topicName = environment.getProperty("csye6225.aws.sns.topic.name");
+        boolean success = SNSUtil.publishNotification(topicName,account.getEmailAddress());
+        if(!success){
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,"Unexpected Error");
+            return result;
+        }
+        result.setData("Created");
+        response.setStatus(HttpServletResponse.SC_CREATED);
+        result.setStatusCode(201);
+        result.setMessage("Yes");
+        return result;
 
     }
 }
