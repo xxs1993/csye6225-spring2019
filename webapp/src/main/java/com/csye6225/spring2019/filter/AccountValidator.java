@@ -1,8 +1,11 @@
 package com.csye6225.spring2019.filter;
 
+import org.springframework.stereotype.Component;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class AccountValidator {
     private Pattern pattern;
     private Matcher matcher;
