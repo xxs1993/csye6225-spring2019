@@ -139,6 +139,8 @@ public class RegisterController {
         }
         result.setData("Created");
         response.setStatus(HttpServletResponse.SC_CREATED);
+        result.setStatusCode(201);
+        result.setMessage("Yes");
         return result;
 
     }
