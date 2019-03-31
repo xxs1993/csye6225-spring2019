@@ -21,6 +21,8 @@ Parameters:
     Type: String
   husky_id:
     Type: String
+  autoscaleRoleArn:
+    Type: String
 Resources: 
   Application:
     Type: AWS::CodeDeploy::Application
@@ -239,7 +241,7 @@ Resources:
       MaxSize: 10
       DesiredCapacity: 3
       Cooldown: 60
-      ServiceLinkedRoleARN: ### need to add role arn
+      ServiceLinkedRoleARN: !Sub ${autoscaleRoleArn}
       TargetGroupARNs: 
         - !Ref ALBTargetGroup
       Tags:
