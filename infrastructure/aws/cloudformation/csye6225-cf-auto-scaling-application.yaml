@@ -215,6 +215,9 @@ Resources:
             VolumeSize: 20
       SecurityGroups: 
         - !Ref WebappSecurityGroup
+      IamInstanceProfile: 
+        Fn::ImportValue:
+          !Sub "${roleStackName}-Ec2InstanceProfile"
       InstanceType: t2.micro
       UserData: 
         Fn::Base64:
@@ -320,6 +323,7 @@ Resources:
       LoadBalancerArn: !Ref "ApplicationLoadBalancer"
       Port: "80"
       Protocol: "HTTP"
+
   ALBTargetGroup: 
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties: 
