@@ -248,7 +248,7 @@ Resources:
         - !Ref ALBTargetGroup
       Tags:
       - Key: csye6225
-        Value: !Sub ${AWS::StackName}-Ec2Instance
+        Value: csye6225-Ec2Instance
         PropagateAtLaunch: true
   WebServerScaleUpPolicy: 
     Type: AWS::AutoScaling::ScalingPolicy
@@ -336,7 +336,7 @@ Resources:
   RecordSet:
     Type: AWS::Route53::RecordSet
     Properties: 
-      Name: !Sub "csye6225-spring2019-${husky_id}.me."
+      Name: !Sub "csye6225-spring2019-${husky_id}.me"
       Type: "TXT"
       AliasTarget: 
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
