@@ -329,7 +329,9 @@ Resources:
       Port: 80
       Protocol: "HTTP"
       UnhealthyThresholdCount: 5
-      VpcId: vpc-0a2455687d2a13ad2
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${refStackName}-vpcId"
 
   RecordSet:
     Type: AWS::Route53::RecordSet
