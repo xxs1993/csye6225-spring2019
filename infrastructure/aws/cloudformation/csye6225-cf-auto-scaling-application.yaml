@@ -19,7 +19,7 @@ Parameters:
     Type: String
   fromEmail:
     Type: String
-  husky_id:
+  huskyId:
     Type: String
   autoscaleRoleArn:
     Type: String
@@ -110,7 +110,6 @@ Resources:
           Value: !Sub ${AWS::StackName}-csye6225-rdsSubnetGroup
 
 #Create RDS Instance
-  reate RDS Instance
   rdsInstance:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -127,9 +126,6 @@ Resources:
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
 
-  # Create Topic
-  
-  
   Lambda:
     Type: "AWS::Lambda::Function"
     Properties: 
@@ -180,22 +176,10 @@ Resources:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 22
-        ToPort: 22
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
+      - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        IpProtocol: tcp
         FromPort: 8080
         ToPort: 8080
-        CidrIp: 0.0.0.0/0
       Tags:
       - Key: Name
         Value: WebappSecurityGroup
@@ -363,11 +347,10 @@ Resources:
   RecordSet:
     Type: AWS::Route53::RecordSet
     Properties: 
-      Name: !Sub "csye6225-spring2019-${husky_id}.me"
-      Type: "TXT"
+      Name: !Sub "csye6225-spring2019-${huskyId}.me"
+      Type: "A"
       AliasTarget: 
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
         EvaluateTargetHealth: true
         HostedZoneId: !GetAtt ApplicationLoadBalancer.CanonicalHostedZoneID
       
-
