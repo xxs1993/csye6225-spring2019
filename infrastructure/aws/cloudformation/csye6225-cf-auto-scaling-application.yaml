@@ -48,7 +48,7 @@ Resources:
       Ec2TagFilters:
           - 
             Key: 
-              "Name"
+              "csye6225"
             Value: 
               !Sub ${AWS::StackName}-Ec2Instance
             Type: 
@@ -251,7 +251,7 @@ Resources:
         - !Ref ALBTargetGroup
       Tags:
       - Key: csye6225
-        Value: csye6225-Ec2Instance
+        Value: !Sub ${AWS::StackName}-Ec2Instance
         PropagateAtLaunch: true
   WebServerScaleUpPolicy: 
     Type: AWS::AutoScaling::ScalingPolicy
@@ -312,6 +312,7 @@ Resources:
             !Sub "${refStackName}-SubA"
         - Fn::ImportValue:
             !Sub "${refStackName}-SubB"
+
   ALBListener: 
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties: 
@@ -347,3 +348,4 @@ Resources:
         EvaluateTargetHealth: true
         HostedZoneId: !GetAtt ApplicationLoadBalancer.CanonicalHostedZoneID
       
+
