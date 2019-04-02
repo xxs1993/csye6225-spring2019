@@ -323,7 +323,7 @@ Resources:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties: 
       Certificates:
-        CertificateArn: !Sub ${certificateArn}
+        - CertificateArn: !Sub ${certificateArn}
       DefaultActions: 
         - Type: "forward"
           TargetGroupArn: !Ref "ALBTargetGroup"
@@ -349,8 +349,9 @@ Resources:
     Properties: 
       Name: !Sub "csye6225-spring2019-${huskyId}.me"
       Type: "A"
+      HostedZoneId: !GetAtt ApplicationLoadBalancer.CanonicalHostedZoneID
       AliasTarget: 
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
         EvaluateTargetHealth: true
-        HostedZoneId: !GetAtt ApplicationLoadBalancer.CanonicalHostedZoneID
+        HostedZoneId: elasticloadbalancing.us-east-1.amazonaws.com
       
