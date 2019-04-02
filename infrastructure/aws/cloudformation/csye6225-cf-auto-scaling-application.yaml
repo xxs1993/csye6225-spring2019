@@ -215,6 +215,9 @@ Resources:
             VolumeSize: 20
       SecurityGroups: 
         - !Ref WebappSecurityGroup
+      IamInstanceProfile: 
+        Fn::ImportValue:
+          !Sub "${roleStackName}-Ec2InstanceProfile"
       InstanceType: t2.micro
       UserData: 
         Fn::Base64:
@@ -248,7 +251,7 @@ Resources:
         - !Ref ALBTargetGroup
       Tags:
       - Key: csye6225
-        Value: !Sub ${AWS::StackName}-Ec2Instance
+        Value: csye6225-Ec2Instance
         PropagateAtLaunch: true
   WebServerScaleUpPolicy: 
     Type: AWS::AutoScaling::ScalingPolicy
@@ -320,6 +323,7 @@ Resources:
       LoadBalancerArn: !Ref "ApplicationLoadBalancer"
       Port: "80"
       Protocol: "HTTP"
+
   ALBTargetGroup: 
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
     Properties: 
@@ -329,12 +333,14 @@ Resources:
       Port: 80
       Protocol: "HTTP"
       UnhealthyThresholdCount: 5
-      VpcId: vpc-0a2455687d2a13ad2
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${refStackName}-vpcId"
 
   RecordSet:
     Type: AWS::Route53::RecordSet
     Properties: 
-      Name: !Sub "csye6225-spring2019-${husky_id}.me."
+      Name: !Sub "csye6225-spring2019-${husky_id}.me"
       Type: "TXT"
       AliasTarget: 
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
