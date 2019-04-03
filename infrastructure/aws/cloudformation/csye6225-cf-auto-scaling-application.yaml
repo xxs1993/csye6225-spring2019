@@ -19,7 +19,7 @@ Parameters:
     Type: String
   fromEmail:
     Type: String
-  husky_id:
+  huskyId:
     Type: String
   autoscaleRoleArn:
     Type: String
@@ -48,7 +48,7 @@ Resources:
       Ec2TagFilters:
           - 
             Key: 
-              "Name"
+              "csye6225"
             Value: 
               !Sub ${AWS::StackName}-Ec2Instance
             Type: 
@@ -110,7 +110,6 @@ Resources:
           Value: !Sub ${AWS::StackName}-csye6225-rdsSubnetGroup
 
 #Create RDS Instance
-  reate RDS Instance
   rdsInstance:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -127,9 +126,6 @@ Resources:
       VPCSecurityGroups: 
       - !GetAtt rdsDBSecurityGroup.GroupId
 
-  # Create Topic
-  
-  
   Lambda:
     Type: "AWS::Lambda::Function"
     Properties: 
@@ -180,22 +176,10 @@ Resources:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
       SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 22
-        ToPort: 22
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
+      - SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        IpProtocol: tcp
         FromPort: 8080
         ToPort: 8080
-        CidrIp: 0.0.0.0/0
       Tags:
       - Key: Name
         Value: WebappSecurityGroup
@@ -251,7 +235,7 @@ Resources:
         - !Ref ALBTargetGroup
       Tags:
       - Key: csye6225
-        Value: csye6225-Ec2Instance
+        Value: !Sub ${AWS::StackName}-Ec2Instance
         PropagateAtLaunch: true
   WebServerScaleUpPolicy: 
     Type: AWS::AutoScaling::ScalingPolicy
@@ -304,6 +288,26 @@ Resources:
           Value: !Ref "WebServerGroup"
       ComparisonOperator: "LessThanThreshold"
 
+  LoadBalancerSecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupDescription: Security Group for LoadBalancer
+      VpcId: 
+        Fn::ImportValue:
+          !Sub "${refStackName}-vpcId"
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 443
+        ToPort: 443
+        CidrIp: 0.0.0.0/0
+      Tags:
+      - Key: Name
+        Value: LoadBalancerSecurityGroup
+
   ApplicationLoadBalancer: 
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
     Properties: 
@@ -312,17 +316,20 @@ Resources:
             !Sub "${refStackName}-SubA"
         - Fn::ImportValue:
             !Sub "${refStackName}-SubB"
+      SecurityGroups: 
+        - !Ref LoadBalancerSecurityGroup
+
   ALBListener: 
     Type: "AWS::ElasticLoadBalancingV2::Listener"
     Properties: 
       Certificates:
-        CertificateArn: !Sub ${certificateArn}
+        - CertificateArn: !Sub ${certificateArn}
       DefaultActions: 
         - Type: "forward"
           TargetGroupArn: !Ref "ALBTargetGroup"
       LoadBalancerArn: !Ref "ApplicationLoadBalancer"
-      Port: "80"
-      Protocol: "HTTP"
+      Port: "443"
+      Protocol: "HTTPS"
 
   ALBTargetGroup: 
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
@@ -340,8 +347,9 @@ Resources:
   RecordSet:
     Type: AWS::Route53::RecordSet
     Properties: 
-      Name: !Sub "csye6225-spring2019-${husky_id}.me"
-      Type: "TXT"
+      Name: !Sub "csye6225-spring2019-${huskyId}.me."
+      Type: "A"
+      HostedZoneName: !Sub "csye6225-spring2019-${huskyId}.me"
       AliasTarget: 
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
         EvaluateTargetHealth: true
