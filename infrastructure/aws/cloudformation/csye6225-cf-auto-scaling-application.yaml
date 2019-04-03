@@ -473,6 +473,7 @@ Resources:
       Name: !Sub "csye6225-spring2019-${huskyId}.me."
       Type: "A"
       HostedZoneName: !Sub "csye6225-spring2019-${huskyId}.me."
+      AliasTarget:
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
         EvaluateTargetHealth: true
         HostedZoneId: !GetAtt ApplicationLoadBalancer.CanonicalHostedZoneID
