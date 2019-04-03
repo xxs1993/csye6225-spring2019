@@ -328,8 +328,8 @@ Resources:
         - Type: "forward"
           TargetGroupArn: !Ref "ALBTargetGroup"
       LoadBalancerArn: !Ref "ApplicationLoadBalancer"
-      Port: "80"
-      Protocol: "HTTP"
+      Port: "443"
+      Protocol: "HTTPS"
 
   ALBTargetGroup: 
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
