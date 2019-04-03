@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-09"
 
 Parameters:
-  refStackName: 
+  refStackName:
     Type: String
   amiId:
     Type: String
@@ -25,63 +25,63 @@ Parameters:
     Type: String
   certificateArn:
     Type: String
-Resources: 
+Resources:
   Application:
     Type: AWS::CodeDeploy::Application
     Properties:
-      ApplicationName: "csye6225-webapp"     
+      ApplicationName: "csye6225-webapp"
       ComputePlatform: Server
 
-  DeploymentGroup: 
+  DeploymentGroup:
     Type: AWS::CodeDeploy::DeploymentGroup
-    Properties: 
+    Properties:
       ApplicationName: !Ref Application
       DeploymentGroupName: "csye6225-webapp-deployment"
       DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
       AutoRollbackConfiguration:
         Enabled: True
-        Events: 
+        Events:
          - "DEPLOYMENT_FAILURE"
       DeploymentStyle:
         DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
         DeploymentType: "IN_PLACE"
       Ec2TagFilters:
-          - 
-            Key: 
+          -
+            Key:
               "csye6225"
-            Value: 
+            Value:
               !Sub ${AWS::StackName}-Ec2Instance
-            Type: 
+            Type:
               "KEY_AND_VALUE"
       ServiceRoleArn:
         Fn::ImportValue:
           !Sub ${roleStackName}-CodeDeployServiceRole-Arn
- 
+
 
 # Create DynamoDB
-  dynamoDB: 
+  dynamoDB:
     Type: AWS::DynamoDB::Table
-    Properties: 
-      AttributeDefinitions: 
-        - 
+    Properties:
+      AttributeDefinitions:
+        -
           AttributeName: "id"
           AttributeType: "S"
-      KeySchema: 
-        - 
+      KeySchema:
+        -
           AttributeName: "id"
           KeyType: "HASH"
-      ProvisionedThroughput: 
+      ProvisionedThroughput:
         ReadCapacityUnits: "5"
         WriteCapacityUnits: "5"
       TableName: "csye6225"
-      
+
 
 # Setup DBSecurity Group
   rdsDBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security Group for Web Servers
-      VpcId: 
+      VpcId:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
       SecurityGroupIngress:
@@ -92,11 +92,11 @@ Resources:
       Tags:
       - Key: Name
         Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
-  
+
 # Setup RDS Subnet Group
-  rdsSubnetGroup: 
+  rdsSubnetGroup:
     Type: "AWS::RDS::DBSubnetGroup"
-    Properties: 
+    Properties:
       DBSubnetGroupDescription: "Subnet for RDS instances"
       SubnetIds:
       - Fn::ImportValue:
@@ -123,18 +123,18 @@ Resources:
       MasterUserPassword: csye6225password
       PubliclyAccessible: true
       DBSubnetGroupName: !Ref rdsSubnetGroup
-      VPCSecurityGroups: 
+      VPCSecurityGroups:
       - !GetAtt rdsDBSecurityGroup.GroupId
 
   Lambda:
     Type: "AWS::Lambda::Function"
-    Properties: 
+    Properties:
       FunctionName: csye6225-lambda-function
       Handler: "index.handler"
       Role: !Sub ${roleArn}
       MemorySize: 256
       Timeout: 120
-      Code: 
+      Code:
         ZipFile: |
           import json
           import cfnresponse
@@ -149,9 +149,9 @@ Resources:
           DynamoDB_TableName: csye6225
           From_EmailAddress: !Sub ${fromEmail}
 
-  snsTopic:      
+  snsTopic:
     Type: AWS::SNS::Topic
-    Properties: 
+    Properties:
       DisplayName: "SNSTopic-DisplayName"
       Subscription:
         - Endpoint: !GetAtt Lambda.Arn
@@ -161,18 +161,18 @@ Resources:
   LambdaInvokePermission:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !GetAtt 
+      FunctionName: !GetAtt
         - Lambda
         - Arn
       Action: 'lambda:InvokeFunction'
       Principal: sns.amazonaws.com
       SourceArn: !Ref snsTopic
-      
+
   WebappSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: Security Group for Web Servers
-      VpcId: 
+      VpcId:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
       SecurityGroupIngress:
@@ -184,34 +184,34 @@ Resources:
       - Key: Name
         Value: WebappSecurityGroup
 
-  LaunchConfig: 
+  LaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
-    Properties: 
+    Properties:
       KeyName: csye6225
       ImageId: !Sub ${amiId}
       LaunchConfigurationName: asg_launch_config
       AssociatePublicIpAddress: true
       BlockDeviceMappings:
         - DeviceName: /dev/sdm
-          Ebs: 
+          Ebs:
             VolumeType: gp2
             DeleteOnTermination: true
             VolumeSize: 20
-      SecurityGroups: 
+      SecurityGroups:
         - !Ref WebappSecurityGroup
-      IamInstanceProfile: 
+      IamInstanceProfile:
         Fn::ImportValue:
           !Sub "${roleStackName}-Ec2InstanceProfile"
       InstanceType: t2.micro
-      UserData: 
+      UserData:
         Fn::Base64:
           !Sub |
               #!/bin/sh
               sudo su
               cd /opt/tomcat/latest/webapps
               rm -rf *
-              echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh 
-              chmod +x /opt/tomcat/latest/bin/setenv.sh 
+              echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh
+              chmod +x /opt/tomcat/latest/bin/setenv.sh
               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /opt/tomcat/latest/bin/setenv.sh
               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /opt/tomcat/latest/bin/setenv.sh
@@ -219,10 +219,10 @@ Resources:
               echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
               systemctl daemon-reload
 
-  WebServerGroup: 
+  WebServerGroup:
     Type: "AWS::AutoScaling::AutoScalingGroup"
-    Properties: 
-      VPCZoneIdentifier: 
+    Properties:
+      VPCZoneIdentifier:
         - Fn::ImportValue:
             !Sub "${refStackName}-SubA"
       LaunchConfigurationName: !Ref LaunchConfig
@@ -231,31 +231,31 @@ Resources:
       DesiredCapacity: 3
       Cooldown: 60
       ServiceLinkedRoleARN: !Sub ${autoscaleRoleArn}
-      TargetGroupARNs: 
+      TargetGroupARNs:
         - !Ref ALBTargetGroup
       Tags:
       - Key: csye6225
         Value: !Sub ${AWS::StackName}-Ec2Instance
         PropagateAtLaunch: true
-  WebServerScaleUpPolicy: 
+  WebServerScaleUpPolicy:
     Type: AWS::AutoScaling::ScalingPolicy
-    Properties: 
+    Properties:
       AdjustmentType: "ChangeInCapacity"
       AutoScalingGroupName: !Ref WebServerGroup
       Cooldown: 60
       ScalingAdjustment: 1
 
-  WebServerScaleDownPolicy: 
+  WebServerScaleDownPolicy:
     Type: AWS::AutoScaling::ScalingPolicy
-    Properties: 
+    Properties:
       AdjustmentType: ChangeInCapacity
       AutoScalingGroupName: !Ref WebServerGroup
       Cooldown: 60
       ScalingAdjustment: -1
 
-  CPUAlarmHigh: 
+  CPUAlarmHigh:
     Type: AWS::CloudWatch::Alarm
-    Properties: 
+    Properties:
       AlarmDescription: "Scale-up if CPU > 90% for 10 minutes"
       MetricName: "CPUUtilization"
       Namespace: "AWS/EC2"
@@ -263,17 +263,17 @@ Resources:
       Period: "300"
       EvaluationPeriods: "2"
       Threshold: "90"
-      AlarmActions: 
+      AlarmActions:
         - !Ref WebServerScaleUpPolicy
-      Dimensions: 
+      Dimensions:
         -
           Name: "AutoScalingGroupName"
           Value:  !Ref WebServerGroup
       ComparisonOperator: "GreaterThanThreshold"
 
-  CPUAlarmLow: 
+  CPUAlarmLow:
     Type: AWS::CloudWatch::Alarm
-    Properties: 
+    Properties:
       AlarmDescription: "Scale-down if CPU < 70% for 10 minutes"
       MetricName: "CPUUtilization"
       Namespace: "AWS/EC2"
@@ -281,9 +281,9 @@ Resources:
       Period: "300"
       EvaluationPeriods: "2"
       Threshold: "70"
-      AlarmActions: 
+      AlarmActions:
         - !Ref "WebServerScaleDownPolicy"
-      Dimensions: 
+      Dimensions:
         - Name: "AutoScalingGroupName"
           Value: !Ref "WebServerGroup"
       ComparisonOperator: "LessThanThreshold"
@@ -292,7 +292,7 @@ Resources:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
       GroupDescription: Security Group for LoadBalancer
-      VpcId: 
+      VpcId:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
       SecurityGroupIngress:
@@ -308,50 +308,49 @@ Resources:
       - Key: Name
         Value: LoadBalancerSecurityGroup
 
-  ApplicationLoadBalancer: 
+  ApplicationLoadBalancer:
     Type: "AWS::ElasticLoadBalancingV2::LoadBalancer"
-    Properties: 
-      Subnets: 
+    Properties:
+      Subnets:
         - Fn::ImportValue:
             !Sub "${refStackName}-SubA"
         - Fn::ImportValue:
             !Sub "${refStackName}-SubB"
-      SecurityGroups: 
+      SecurityGroups:
         - !Ref LoadBalancerSecurityGroup
 
-  ALBListener: 
+  ALBListener:
     Type: "AWS::ElasticLoadBalancingV2::Listener"
-    Properties: 
+    Properties:
       Certificates:
         - CertificateArn: !Sub ${certificateArn}
-      DefaultActions: 
+      DefaultActions:
         - Type: "forward"
           TargetGroupArn: !Ref "ALBTargetGroup"
       LoadBalancerArn: !Ref "ApplicationLoadBalancer"
       Port: "443"
       Protocol: "HTTPS"
 
-  ALBTargetGroup: 
+  ALBTargetGroup:
     Type: "AWS::ElasticLoadBalancingV2::TargetGroup"
-    Properties: 
+    Properties:
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 3
       Port: 80
       Protocol: "HTTP"
       UnhealthyThresholdCount: 5
-      VpcId: 
+      VpcId:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
 
   RecordSet:
     Type: AWS::Route53::RecordSet
-    Properties: 
+    Properties:
       Name: !Sub "csye6225-spring2019-${huskyId}.me."
       Type: "A"
       HostedZoneName: !Sub "csye6225-spring2019-${huskyId}.me"
-      AliasTarget: 
+      AliasTarget:
         DNSName: !GetAtt ApplicationLoadBalancer.DNSName
         EvaluateTargetHealth: true
         HostedZoneId: !GetAtt ApplicationLoadBalancer.CanonicalHostedZoneID
-      
