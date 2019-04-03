@@ -110,10 +110,6 @@
                 <stringProp name="Header.name">Content-Type</stringProp>
                 <stringProp name="Header.value">application/json</stringProp>
               </elementProp>
-              <elementProp name="" elementType="Header">
-                <stringProp name="Header.name">my-sample-header</stringProp>
-                <stringProp name="Header.value">Lorem ipsum dolor sit amet</stringProp>
-              </elementProp>
             </collectionProp>
           </HeaderManager>
           <hashTree/>
@@ -121,7 +117,7 @@
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
               <collectionProp name="Arguments.arguments"/>
             </elementProp>
-            <stringProp name="HTTPSampler.domain">54.227.19.31</stringProp>
+            <stringProp name="HTTPSampler.domain">54.147.189.191</stringProp>
             <stringProp name="HTTPSampler.port">8080</stringProp>
             <stringProp name="HTTPSampler.protocol"></stringProp>
             <stringProp name="HTTPSampler.contentEncoding"></stringProp>
@@ -134,7 +130,7 @@
           <AuthManager guiclass="AuthPanel" testclass="AuthManager" testname="HTTP Authorization Manager" enabled="true">
             <collectionProp name="AuthManager.auth_list">
               <elementProp name="" elementType="Authorization">
-                <stringProp name="Authorization.url">http://54.227.19.31:8080/note</stringProp>
+                <stringProp name="Authorization.url">http://54.147.189.191:8080/note</stringProp>
                 <stringProp name="Authorization.username">${email}</stringProp>
                 <stringProp name="Authorization.password">${password}</stringProp>
                 <stringProp name="Authorization.domain"></stringProp>
