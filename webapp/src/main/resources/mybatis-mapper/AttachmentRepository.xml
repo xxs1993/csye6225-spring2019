@@ -21,11 +21,11 @@
     </insert>
 
     <select id="listAttachmentByNoteId" resultMap="result">
-        select * from attachment where note_id=#{noteId}
+        select * from attachment where note_id= '${noteId}'
     </select>
 
     <select id="getAttachmentById" resultMap="result">
-        select * from attachment where id=#{id}
+        select * from attachment where id= '${id}'
     </select>
 
     <delete id="deleteAttachmentById" parameterType="string">
