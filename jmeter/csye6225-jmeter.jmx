@@ -35,8 +35,8 @@
               <stringProp name="-1326197564">domain</stringProp>
             </collectionProp>
             <collectionProp name="UserParameters.thread_values">
-              <collectionProp name="1071997871">
-                <stringProp name="482247573">https://csye6225-spring2019-huangyuc.me</stringProp>
+              <collectionProp name="2076955033">
+                <stringProp name="1865336900">csye6225-spring2019-huangyuc.me</stringProp>
               </collectionProp>
             </collectionProp>
             <boolProp name="UserParameters.per_iteration">false</boolProp>
@@ -251,10 +251,10 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request for Attachment" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="/Users/Alvin/Desktop/Picture1.png" elementType="HTTPFileArg">
-                  <stringProp name="File.path">/Users/Alvin/Desktop/Picture1.png</stringProp>
+                <elementProp name="/Picture1.png" elementType="HTTPFileArg">
+                  <stringProp name="File.path">/Picture1.png</stringProp>
                   <stringProp name="File.paramname">file</stringProp>
-                  <stringProp name="File.mimetype"></stringProp>
+                  <stringProp name="File.mimetype">image/png</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
