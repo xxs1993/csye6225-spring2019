@@ -18,7 +18,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">500</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -174,8 +174,8 @@
                 <stringProp name="1216985755">password</stringProp>
               </collectionProp>
               <collectionProp name="UserParameters.thread_values">
-                <collectionProp name="-1514757519">
-                  <stringProp name="-841940275">${__V(Test${__RandomString(10,abcdefg)}@husky.neu.edu)}</stringProp>
+                <collectionProp name="401167994">
+                  <stringProp name="-1958207391">${__V(${__UUID()}@husky.neu.edu)}</stringProp>
                   <stringProp name="1882594252">${__V(@${__RandomString(5,hijklmno)}${__RandomString(5,0123456789)})}</stringProp>
                 </collectionProp>
               </collectionProp>
