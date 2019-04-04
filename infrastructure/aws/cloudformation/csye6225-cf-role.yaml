@@ -61,6 +61,10 @@ Resources:
           Path: "/"
           RoleName: "LambdaRole" 
 
+  AWSServiceRoleForAutoScaling:      
+      Type: AWS::IAM::ServiceLinkedRole
+      Properties: 
+        AWSServiceName: "autoscaling.amazonaws.com"
         ## Role
 
 
@@ -300,4 +304,3 @@ Outputs:
     Value: !GetAtt CodeDeployServiceRole.Arn
     Export:
       Name: !Sub ${AWS::StackName}-CodeDeployServiceRole-Arn
-

@@ -1,6 +1,7 @@
 package com.csye6225.spring2019.controller;
 
 
+import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.amazonaws.services.s3.model.Bucket;
 import com.csye6225.spring2019.entity.Account;
 import com.csye6225.spring2019.entity.Attachment;
@@ -35,6 +36,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -95,6 +97,15 @@ public class AttachmentController {
                 }
             }
         }
+        return res;
+    }
+    @GetMapping("/attachment")
+    public Result<List<Attachment>> getA(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        Result<List<Attachment>> res = new Result<>();
+        String noteId = httpServletRequest.getParameter("noteId");
+        res.setData(attachmentService.findAttachmentsByNoteId(noteId));
+        res.setStatusCode(200);
+        res.setMessage("OK");
         return res;
     }
 
@@ -221,7 +232,8 @@ public class AttachmentController {
        // String fileType = name.get(1);
         //attachment.setFileType(fileType);
         String multipartFileName = multipartFile.getOriginalFilename();
-        String fileName = multipartFileName.substring(0,multipartFileName.lastIndexOf("."))+"-"+System.currentTimeMillis();
+        String uuid = UUID.randomUUID().toString();
+        String fileName = multipartFileName.substring(0,multipartFileName.lastIndexOf("."))+"-"+uuid;
         String fileType = multipartFileName.substring(multipartFileName.lastIndexOf(".")+1);
         //transfer  multipart file to file
         //String fileName = name.get(0)+"-"+System.currentTimeMillis();
