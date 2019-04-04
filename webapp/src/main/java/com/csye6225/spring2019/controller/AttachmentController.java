@@ -101,8 +101,8 @@ public class AttachmentController {
     @GetMapping("/attachment")
     public Result<List<Attachment>> getA(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
         Result<List<Attachment>> res = new Result<>();
-        String id = httpServletRequest.getParameter("id");
-        res.setData(attachmentService.findAttachmentsByNoteId(id));
+        String noteId = httpServletRequest.getParameter("noteId");
+        res.setData(attachmentService.findAttachmentsByNoteId(noteId));
         res.setStatusCode(200);
         res.setMessage("OK");
         return res;
