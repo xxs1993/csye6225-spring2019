@@ -1495,6 +1495,11 @@ Resources:
             Type: !Ref ruleAction
           Priority: 100
           RuleId: !Ref wafgAdminAccessRule
+  coolAssociation:
+    Type: "AWS::WAFRegional::WebACLAssociation"
+    Properties:
+      ResourceArn: !Ref ApplicationLoadBalancer
+      WebACLId: !Ref wafrOwaspACL
 
 ## ::OUTPUTS::
 ## Outputs useful in other templates
