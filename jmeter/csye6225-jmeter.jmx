@@ -18,7 +18,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.num_threads">400</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -174,8 +174,8 @@
                 <stringProp name="1216985755">password</stringProp>
               </collectionProp>
               <collectionProp name="UserParameters.thread_values">
-                <collectionProp name="-1514757519">
-                  <stringProp name="-841940275">${__V(Test${__RandomString(10,abcdefg)}@husky.neu.edu)}</stringProp>
+                <collectionProp name="401167994">
+                  <stringProp name="-1958207391">${__V(${__UUID()}@husky.neu.edu)}</stringProp>
                   <stringProp name="1882594252">${__V(@${__RandomString(5,hijklmno)}${__RandomString(5,0123456789)})}</stringProp>
                 </collectionProp>
               </collectionProp>
@@ -187,6 +187,10 @@
                 <elementProp name="" elementType="Header">
                   <stringProp name="Header.name">Content-Type</stringProp>
                   <stringProp name="Header.value">application/json</stringProp>
+                </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">x-csrf-token</stringProp>
+                  <stringProp name="Header.value">${__UUID()}</stringProp>
                 </elementProp>
               </collectionProp>
             </HeaderManager>
@@ -244,6 +248,10 @@
                   <stringProp name="Header.name">Content-Type</stringProp>
                   <stringProp name="Header.value">application/json</stringProp>
                 </elementProp>
+                <elementProp name="" elementType="Header">
+                  <stringProp name="Header.name">x-csrf-token</stringProp>
+                  <stringProp name="Header.value">${__UUID()}</stringProp>
+                </elementProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
@@ -251,8 +259,8 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request for Attachment" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="/Picture1.png" elementType="HTTPFileArg">
-                  <stringProp name="File.path">/Picture1.png</stringProp>
+                <elementProp name="Picture1.png" elementType="HTTPFileArg">
+                  <stringProp name="File.path">Picture1.png</stringProp>
                   <stringProp name="File.paramname">file</stringProp>
                   <stringProp name="File.mimetype">image/png</stringProp>
                 </elementProp>
