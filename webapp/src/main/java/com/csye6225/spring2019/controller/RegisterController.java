@@ -78,6 +78,16 @@ public class RegisterController {
         return userRepository.findAll();
     }
 
+    @GetMapping("/user")
+    public Result<Account> getID(HttpServletResponse httpServletResponse, HttpServletRequest httpServletRequest){
+
+        String name = httpServletRequest.getParameter("name");
+        Account account = userRepository.findByEmailAddress(name);
+        Result result = new Result();
+        result.setData(account);
+        return result;
+    }
+
     @PostMapping("user/register")
     public Result<String> register(@RequestBody Account account){
         statsDClient.incrementCounter("endpoint.register.http.post");
