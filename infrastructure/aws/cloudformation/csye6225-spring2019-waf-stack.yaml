@@ -1,25 +1,28 @@
-AWSTemplateFormatVersion: "2010-09-09"
+---
+## Example AWS WAF rule set covering generic OWASP Top 10 vulnerability
+## areas with PHP backend specific misconfigurations.
+##
+## Copyright 2016 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+## Licensed under the Amazon Software License (the "License"). You may not use this file except in compliance with the License.
+## A copy of the License is located at http://aws.amazon.com/asl/ or in the "license" file accompanying this file.
+## This file is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, express or implied.
+## See the License for the specific language governing permissions and limitations under the License.
+##
+## Changelog:
+## 2017-06-27 - Initial release
+##
+## Repository:
+## https://github.com/awslabs/aws-waf-sample
+##
+## Dependencies:
+## none
 
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS WAF Basic OWASP Example Rule Set
+
+## ::PARAMETERS::
+## Template parameters to be configured by user
 Parameters:
-  refStackName:
-    Type: String
-  amiId:
-    Type: String
-
-  roleStackName:
-    Type: String
-  rdsDBUser:
-    Type: String
-  rdsDBPass:
-    Type: String
-  S3BucketName:
-    Type: String
-  RDSEndPoint:
-    Type: String
-  roleArn:
-    Type: String
-  fromEmail:
-    Type: String
   stackPrefix:
     Type: String
     Description: The prefix to use when naming resources in this stack. Normally we would use the stack name, but since this template can be used as a resource in other stacks we want to keep the naming consistent. No symbols allowed.
@@ -33,7 +36,7 @@ Parameters:
     AllowedValues:
       - Global
       - Regional
-    Default: Global
+    Default: Regional
   ruleAction:
     Type: String
     Description: The type of action you want to iplement for the rules in this set. Valid options are COUNT or BLOCK.
@@ -78,6 +81,8 @@ Parameters:
     Description: The size in bytes of the CSRF token value. For example if it's a canonically formatted UUIDv4 value the expected size would be 36 bytes/ASCII characters
     Default: 36
 
+## ::METADATA::
+## CloudFormation parameter UI definitions
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -137,236 +142,15 @@ Metadata:
       csrfExpectedSize:
         default: Token Size
 
+## ::CONDITIONS::
+## Determines if we're generating regional or global resources
 Conditions:
   isRegional: !Equals [ !Ref stackScope, Regional ]
   isGlobal: !Equals [ !Ref stackScope, Global ]
 
+## ::RESOURCES::
+## Resources used in this solution
 Resources:
-
-  Application:
-    Type: AWS::CodeDeploy::Application
-    Properties:
-      ApplicationName: "csye6225-webapp"
-      ComputePlatform: Server
-
-  DeploymentGroup:
-    Type: AWS::CodeDeploy::DeploymentGroup
-    Properties:
-      ApplicationName: !Ref Application
-      DeploymentGroupName: "csye6225-webapp-deployment"
-      DeploymentConfigName: "CodeDeployDefault.AllAtOnce"
-      AutoRollbackConfiguration:
-        Enabled: True
-        Events:
-         - "DEPLOYMENT_FAILURE"
-      DeploymentStyle:
-        DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
-        DeploymentType: "IN_PLACE"
-      Ec2TagFilters:
-          -
-            Key:
-              "Name"
-            Value:
-              !Sub ${AWS::StackName}-Ec2Instance
-            Type:
-              "KEY_AND_VALUE"
-      ServiceRoleArn:
-        Fn::ImportValue:
-          !Sub ${roleStackName}-CodeDeployServiceRole-Arn
-
-# Setup Security Group for Ec2 Instance
-  WebappSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security Group for Web Servers
-      VpcId:
-        Fn::ImportValue:
-          !Sub "${refStackName}-vpcId"
-      SecurityGroupIngress:
-      - IpProtocol: tcp
-        FromPort: 22
-        ToPort: 22
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 443
-        ToPort: 443
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 8080
-        ToPort: 8080
-        CidrIp: 0.0.0.0/0
-      Tags:
-      - Key: Name
-        Value: WebappSecurityGroup
-
-# Create Ec2 Instance
-  EC2Instance:
-    Type: AWS::EC2::Instance
-    Properties:
-      InstanceType: t2.micro
-
-      KeyName: csye6225
-
-      SecurityGroupIds:
-        - !Ref WebappSecurityGroup
-      DisableApiTermination: false
-      SubnetId:
-        Fn::ImportValue:
-          !Sub "${refStackName}-SubA"
-      BlockDeviceMappings:
-        - DeviceName: /dev/sdm
-          Ebs:
-            VolumeType: gp2
-            DeleteOnTermination: true
-            VolumeSize: 20
-      ImageId: !Sub ${amiId}
-
-      IamInstanceProfile:
-        Fn::ImportValue:
-          !Sub "${roleStackName}-Ec2InstanceProfile"
-      UserData:
-        Fn::Base64:
-          !Sub |
-              #!/bin/sh
-              sudo su
-              cd /opt/tomcat/latest/webapps
-              rm -rf *
-              echo '#!/bin/sh' > /opt/tomcat/latest/bin/setenv.sh
-              chmod +x /opt/tomcat/latest/bin/setenv.sh
-              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.profiles.active=dev"' >> /opt/tomcat/latest/bin/setenv.sh
-              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.url=jdbc:mysql://${rdsInstance.Endpoint.Address}:3306/csye6225"' >> /opt/tomcat/latest/bin/setenv.sh
-              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.username=${rdsDBUser}"' >> /opt/tomcat/latest/bin/setenv.sh
-              echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
-              echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
-              systemctl daemon-reload
-
-
-      Tags:
-      - Key: Name
-        Value: !Sub ${AWS::StackName}-Ec2Instance
-
-
-# Create DynamoDB
-  dynamoDB:
-    Type: AWS::DynamoDB::Table
-    Properties:
-      AttributeDefinitions:
-        -
-          AttributeName: "id"
-          AttributeType: "S"
-      KeySchema:
-        -
-          AttributeName: "id"
-          KeyType: "HASH"
-      ProvisionedThroughput:
-        ReadCapacityUnits: "5"
-        WriteCapacityUnits: "5"
-      TimeToLiveSpecification:
-        AttributeName: TTL
-        Enabled: true
-      TableName: "csye6225"
-
-
-
-
-# Setup DBSecurity Group
-  rdsDBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Security Group for Web Servers
-      VpcId:
-        Fn::ImportValue:
-          !Sub "${refStackName}-vpcId"
-      SecurityGroupIngress:
-      - SourceSecurityGroupId: !Ref WebappSecurityGroup
-        IpProtocol: tcp
-        FromPort: "3306"
-        ToPort: "3306"
-      Tags:
-      - Key: Name
-        Value: !Sub ${AWS::StackName}-csye6225-rdsDBSecurityGroup
-
-# Setup RDS Subnet Group
-  rdsSubnetGroup:
-    Type: "AWS::RDS::DBSubnetGroup"
-    Properties:
-      DBSubnetGroupDescription: "Subnet for RDS instances"
-      SubnetIds:
-      - Fn::ImportValue:
-          !Sub "${refStackName}-SubA"
-      - Fn::ImportValue:
-          !Sub "${refStackName}-SubB"
-      - Fn::ImportValue:
-          !Sub "${refStackName}-SubC"
-      Tags:
-        - Key: Name
-          Value: !Sub ${AWS::StackName}-csye6225-rdsSubnetGroup
-
-#Create RDS Instance
-  rdsInstance:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      AllocatedStorage: 5
-      DBName: csye6225
-      Engine: MySQL
-      DBInstanceClass: db.t2.medium
-      MultiAZ: false
-      DBInstanceIdentifier: csye6225-spring2019
-      MasterUsername: csye6225master
-      MasterUserPassword: csye6225password
-      PubliclyAccessible: true
-      DBSubnetGroupName: !Ref rdsSubnetGroup
-      VPCSecurityGroups:
-      - !GetAtt rdsDBSecurityGroup.GroupId
-
-  # Create Topic
-
-
-  Lambda:
-    Type: "AWS::Lambda::Function"
-    Properties:
-      FunctionName: csye6225-lambda-function
-      Handler: "index.handler"
-      Role: !Sub ${roleArn}
-      MemorySize: 256
-      Timeout: 120
-      Code:
-        ZipFile: |
-          import json
-          import cfnresponse
-          def handler(event, context):
-            responseValue = int(event['ResourceProperties']['Input']) * 5
-            responseData = {}
-            responseData['Data'] = responseValue
-            cfnresponse.send(event, context, cfnresponse.SUCCESS, responseData, "CustomResourcePhysicalID")
-      Runtime: "python3.6"
-      Environment:
-        Variables:
-          DynamoDB_TableName: csye6225
-          From_EmailAddress: !Sub ${fromEmail}
-
-  snsTopic:
-    Type: AWS::SNS::Topic
-    Properties:
-      DisplayName: "SNSTopic-DisplayName"
-      Subscription:
-        - Endpoint: !GetAtt Lambda.Arn
-          Protocol: "lambda"
-      TopicName: password_reset
-
-  LambdaInvokePermission:
-    Type: AWS::Lambda::Permission
-    Properties:
-      FunctionName: !GetAtt
-        - Lambda
-        - Arn
-      Action: 'lambda:InvokeFunction'
-      Principal: sns.amazonaws.com
-      SourceArn: !Ref snsTopic
 
 ## 1.
 ## OWASP Top 10 A1
