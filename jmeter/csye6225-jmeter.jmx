@@ -18,7 +18,7 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <stringProp name="LoopController.loops">1</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">100</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -251,10 +251,10 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request for Attachment" enabled="true">
             <elementProp name="HTTPsampler.Files" elementType="HTTPFileArgs">
               <collectionProp name="HTTPFileArgs.files">
-                <elementProp name="/Users/Alvin/Desktop/Picture1.png" elementType="HTTPFileArg">
-                  <stringProp name="File.path">/Users/Alvin/Desktop/Picture1.png</stringProp>
+                <elementProp name="Picture1.png" elementType="HTTPFileArg">
+                  <stringProp name="File.path">Picture1.png</stringProp>
                   <stringProp name="File.paramname">file</stringProp>
-                  <stringProp name="File.mimetype"></stringProp>
+                  <stringProp name="File.mimetype">image/png</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>
