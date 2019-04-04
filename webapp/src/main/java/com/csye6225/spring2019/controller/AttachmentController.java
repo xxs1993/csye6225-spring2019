@@ -1,6 +1,7 @@
 package com.csye6225.spring2019.controller;
 
 
+import com.amazonaws.services.dynamodbv2.xspec.L;
 import com.amazonaws.services.s3.model.Bucket;
 import com.csye6225.spring2019.entity.Account;
 import com.csye6225.spring2019.entity.Attachment;
@@ -95,6 +96,15 @@ public class AttachmentController {
                 }
             }
         }
+        return res;
+    }
+    @GetMapping("/attachment")
+    public Result<List<Attachment>> getA(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        Result<List<Attachment>> res = new Result<>();
+        String noteId = httpServletRequest.getParameter("noteId");
+        res.setData(attachmentService.findAttachmentsByNoteId(noteId));
+        res.setStatusCode(200);
+        res.setMessage("OK");
         return res;
     }
 
