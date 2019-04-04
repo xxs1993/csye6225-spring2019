@@ -460,12 +460,15 @@ Resources:
       HealthCheckIntervalSeconds: 30
       HealthCheckTimeoutSeconds: 5
       HealthyThresholdCount: 3
-      Port: 80
+      Port: 8080
       Protocol: "HTTP"
       UnhealthyThresholdCount: 5
       VpcId:
         Fn::ImportValue:
           !Sub "${refStackName}-vpcId"
+      TargetGroupAttributes:
+        - Key: "stickiness.enabled"
+          Value: true
 
   RecordSet:
     Type: AWS::Route53::RecordSet
@@ -1492,12 +1495,6 @@ Resources:
             Type: !Ref ruleAction
           Priority: 100
           RuleId: !Ref wafgAdminAccessRule
-  coolWafAssociation:
-    Type: "AWS::WAFRegional::WebACLAssociation"
-    Properties:
-      ResourceArn: !Ref ApplicationLoadBalancer
-      WebACLId: !Ref wafrOwaspACL
-
 
 ## ::OUTPUTS::
 ## Outputs useful in other templates
