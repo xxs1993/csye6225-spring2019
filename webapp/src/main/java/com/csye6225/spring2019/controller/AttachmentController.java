@@ -36,6 +36,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 import static javax.servlet.http.HttpServletResponse.*;
 
@@ -231,7 +232,8 @@ public class AttachmentController {
        // String fileType = name.get(1);
         //attachment.setFileType(fileType);
         String multipartFileName = multipartFile.getOriginalFilename();
-        String fileName = multipartFileName.substring(0,multipartFileName.lastIndexOf("."))+"-"+System.currentTimeMillis();
+        String uuid = UUID.randomUUID().toString();
+        String fileName = multipartFileName.substring(0,multipartFileName.lastIndexOf("."))+"-"+uuid;
         String fileType = multipartFileName.substring(multipartFileName.lastIndexOf(".")+1);
         //transfer  multipart file to file
         //String fileName = name.get(0)+"-"+System.currentTimeMillis();
