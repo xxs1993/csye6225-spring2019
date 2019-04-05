@@ -168,6 +168,8 @@ Resources:
       DeploymentStyle:
         DeploymentOption: "WITHOUT_TRAFFIC_CONTROL"
         DeploymentType: "IN_PLACE"
+      AutoScalingGroups:
+        - !Ref WebServerGroup
       Ec2TagFilters:
           -
             Key:
@@ -341,6 +343,8 @@ Resources:
               echo 'JAVA_OPTS="$JAVA_OPTS -Dspring.datasource.password=${rdsDBPass}"' >> /opt/tomcat/latest/bin/setenv.sh
               echo 'JAVA_OPTS="$JAVA_OPTS -Dcsye6225.aws.bucket.name=${S3BucketName}"' >> /opt/tomcat/latest/bin/setenv.sh
               systemctl daemon-reload
+              cd /home/centos
+              echo '' > /home/centos/flag.txt
 
   WebServerGroup:
     Type: "AWS::AutoScaling::AutoScalingGroup"
