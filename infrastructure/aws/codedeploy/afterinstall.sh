@@ -7,6 +7,10 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
     -c file:/home/centos/cloudwatch.json \
     -s
 ## may change the service name
+while [ ! -f /home/centos/flag.txt ]
+do
+  sleep 2
+done
 sudo systemctl start amazon-cloudwatch-agent
 sudo systemctl start tomcat
 
