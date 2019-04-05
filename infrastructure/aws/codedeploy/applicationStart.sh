@@ -1,4 +1,4 @@
 #!/bin/bash
-sudo su
-systemctl daemon-reload
+# sudo su
+sudo systemctl daemon-reload
 sudo service tomcat start
