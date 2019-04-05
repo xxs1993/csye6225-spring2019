@@ -39,6 +39,7 @@ jobs:
             cp infrastructure/aws/codedeploy/*.sh .
             cp infrastructure/aws/cloudwatch/*.json .
             mv webapp/target/csye6225-0.0.1-SNAPSHOT.war webapp/target/ROOT.war
+            chmod 755 webapp/target/ROOT.war
             zip -r csye6225-web-app-${CIRCLE_BUILD_NUM}.zip webapp/target/ROOT.war *.sh *.yml *.json
             ls
             mv csye6225-web-app-${CIRCLE_BUILD_NUM}.zip codedeploy_artifact/
