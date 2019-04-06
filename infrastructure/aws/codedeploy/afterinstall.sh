@@ -8,5 +8,4 @@ sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
     -s
 ## may change the service name
 sudo systemctl start amazon-cloudwatch-agent
-sudo systemctl start tomcat
 
