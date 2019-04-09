@@ -359,6 +359,7 @@ Resources:
       ServiceLinkedRoleARN: !Sub ${autoscaleRoleArn}
       TargetGroupARNs:
         - !Ref ALBTargetGroup
+        - !Ref NoWafALBTargetGroup
       Tags:
       - Key: csye6225
         Value: !Sub ${AWS::StackName}-Ec2Instance
