@@ -11,6 +11,7 @@ import com.csye6225.spring2019.util.SNSUtil;
 import com.timgroup.statsd.NonBlockingStatsDClient;
 import com.timgroup.statsd.StatsDClient;
 import lombok.extern.log4j.Log4j2;
+import org.apache.ibatis.annotations.Param;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -151,6 +152,16 @@ public class RegisterController {
         response.setStatus(HttpServletResponse.SC_CREATED);
         result.setStatusCode(201);
         result.setMessage("Yes");
+        return result;
+    }
+
+    @GetMapping("reset")
+    public Result<String> resetMessage(HttpServletRequest request,HttpServletResponse response,
+                                @Param("email") String email,@Param("token")String token) throws Exception{
+        Result<String> result = new Result<>();
+        result.setData("Success");
+        result.setStatusCode(200);
+        result.setMessage("Reset Successfully");
         return result;
     }
     
